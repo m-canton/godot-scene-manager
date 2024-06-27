@@ -14,6 +14,7 @@ config/name="SceneManager"
 run/main_scene="res://addons/scene_manager/test/change_scene/first_scene.tscn"
 config/features=PackedStringArray("4.3", "Mobile")
 config/icon="res://icon.svg"
+config/tags=PackedStringArray("plugin")
 
 [autoload]
 
