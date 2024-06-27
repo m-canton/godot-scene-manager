@@ -1,0 +1,32 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[addons]
+
+scene_manager/loading_screen="res://addons/scene_manager/test/custom_loading_screen/loading_screen.tscn"
+
+[application]
+
+config/name="SceneManager"
+run/main_scene="res://addons/scene_manager/test/change_scene/first_scene.tscn"
+config/features=PackedStringArray("4.3", "Mobile")
+config/icon="res://icon.svg"
+
+[autoload]
+
+SceneManager="*res://addons/scene_manager/autoload/scene_manager.gd"
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/scene_manager/plugin.cfg")
+
+[rendering]
+
+renderer/rendering_method="mobile"

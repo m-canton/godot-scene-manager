@@ -1,0 +1,51 @@
+[gd_scene load_steps=3 format=3 uid="uid://crwciv6fimpe5"]
+
+[ext_resource type="Script" path="res://addons/scene_manager/test/change_scene/second_scene.gd" id="1_48ngd"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_soxly"]
+bg_color = Color(0.211765, 0.239216, 0.290196, 1)
+
+[node name="SecondScene" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_48ngd")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_soxly")
+
+[node name="ChangeSceneButton" type="Button" parent="Panel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -4.0
+offset_top = -4.0
+offset_right = 4.0
+offset_bottom = 4.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Change Scene To First
+without Loading Screen"
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -20.0
+offset_right = 20.0
+offset_bottom = 67.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 48

@@ -1,9 +1,3 @@
-*
-!addons
-!addons/scene_manager
-!addons/scene_manager/**
-
-!.gitignore
-!.gitattributes
-!LICENSE
-!README.md
+.godot/
+android/
+export_presets.cfg

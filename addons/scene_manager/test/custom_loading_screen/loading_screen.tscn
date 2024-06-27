@@ -1,0 +1,37 @@
+[gd_scene load_steps=4 format=3 uid="uid://buqdety8df6ns"]
+
+[ext_resource type="Script" path="res://addons/scene_manager/test/custom_loading_screen/loading_screen.gd" id="1_151f7"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jqoim"]
+content_margin_left = 5.0
+content_margin_top = 5.0
+content_margin_right = 5.0
+content_margin_bottom = 5.0
+bg_color = Color(0.211765, 0.239216, 0.290196, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2gmla"]
+bg_color = Color(0.28931, 0.581706, 0.322536, 1)
+
+[node name="LoadingScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_151f7")
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -27.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_jqoim")
+
+[node name="ProgressBar" type="ProgressBar" parent="PanelContainer"]
+layout_mode = 2
+theme_override_styles/fill = SubResource("StyleBoxFlat_2gmla")
