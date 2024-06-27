@@ -14,7 +14,6 @@ config/name="SceneManager"
 config/tags=PackedStringArray("plugin")
 run/main_scene="res://addons/scene_manager/test/change_scene/first_scene.tscn"
 config/features=PackedStringArray("4.3", "Mobile")
-boot_splash/image="res://icon.png"
 boot_splash/fullsize=false
 config/icon="res://icon.png"
 
