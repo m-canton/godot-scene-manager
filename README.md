@@ -6,7 +6,13 @@ Scene Manager Plugin for Godot 4.3
 
 SceneManager autoload has two methods called like global functions `change_scene_to_file` and `change_scene_to_packed_scene`. They do the same and have an optional argument `properties` to pass initial properties for next scene. You also can use a loading screen when a file path is used. You can create a custom loading screen which must extend `LoadingScreenBase` class. You can set loading screen in project settings.
 
-Look test folder to see some examples.
+Look test folder to see some examples. Simple use:
+
+```gdscript
+SceneManager.change_scene_to_file("your_tscn_file_path", {
+    my_next_scene_property = "A value",
+}, 1.0)
+```
 
 ## Install
 
