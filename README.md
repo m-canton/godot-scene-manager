@@ -10,7 +10,7 @@ Look test folder to see some examples.
 
 ## Install
 
-This package is pending in Godot Assets now. You can use it, adding scene-manager folder in your project addons folder and enable this plugin.
+This package is pending in Godot Assets now. You can use it, adding scene_manager folder in your project addons folder and enabling this plugin.
 
 ## Uninstall
 
