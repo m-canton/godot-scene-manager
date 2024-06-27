@@ -1,19 +1,17 @@
 @tool
 extends EditorPlugin
 
-const SceneManagerAutoload = preload("res://addons/scene_manager/autoload/scene_manager.gd")
-
 
 func _enter_tree() -> void:
 	add_autoload_singleton("SceneManager", "res://addons/scene_manager/autoload/scene_manager.gd")
 	
 	#region Settings
-	if not ProjectSettings.has_setting(SceneManagerAutoload.LOADING_SCREEN_NAME_SETTING):
-		ProjectSettings.set_setting(SceneManagerAutoload.LOADING_SCREEN_NAME_SETTING, SceneManagerAutoload.LOADING_SCREEN_PATH)
-	ProjectSettings.set_initial_value(SceneManagerAutoload.LOADING_SCREEN_NAME_SETTING, SceneManagerAutoload.LOADING_SCREEN_PATH)
-	ProjectSettings.set_as_basic(SceneManagerAutoload.LOADING_SCREEN_NAME_SETTING, true)
+	if not ProjectSettings.has_setting(LoadingScreenBase.SETTING_NAME):
+		ProjectSettings.set_setting(LoadingScreenBase.SETTING_NAME, LoadingScreenBase.SETTING_DEFAULT_VALUE)
+	ProjectSettings.set_initial_value(LoadingScreenBase.SETTING_NAME, LoadingScreenBase.SETTING_DEFAULT_VALUE)
+	ProjectSettings.set_as_basic(LoadingScreenBase.SETTING_NAME, true)
 	ProjectSettings.add_property_info({
-		name = SceneManagerAutoload.LOADING_SCREEN_NAME_SETTING,
+		name = LoadingScreenBase.SETTING_NAME,
 		type = TYPE_STRING,
 		hint = PROPERTY_HINT_FILE,
 		hint_string = "*.scn,*.tscn",

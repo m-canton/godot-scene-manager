@@ -7,4 +7,7 @@ func _ready() -> void:
 
 func _on_button_pressed() -> void:
 	var path := "res://addons/scene_manager/test/change_scene/second_scene.tscn"
-	SceneManager.change_scene_to_file(path, {scene_label = "My cool scene!", cool = "does not exist"}, 1)
+	SceneManager.change_scene_to_file(path, {
+		scene_label = "My cool scene!",
+		cool = "does not exist",
+	}, 1.0)

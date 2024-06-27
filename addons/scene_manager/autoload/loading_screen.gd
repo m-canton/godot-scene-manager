@@ -1,5 +1,10 @@
 class_name LoadingScreenBase extends Control
 
+## Loading Screen setting name.
+const SETTING_NAME := "addons/scene_manager/loading_screen"
+## Default Loading Screen scene path.
+const SETTING_DEFAULT_VALUE := "res://addons/scene_manager/autoload/loading_screen.tscn"
+
 ## LoadingScreen base class
 ## 
 ## Extend this class and override methods to create a custom loading screen.

@@ -4,20 +4,13 @@ extends Node
 ## 
 ## This autoload allows to change scenes and set properties when instance is
 ## created.
-## 
-## @experimental
-
-## Default Loading Screen scene path.
-const LOADING_SCREEN_PATH := "res://addons/scene_manager/autoload/loading_screen.tscn"
-## Loading Screen setting name.
-const LOADING_SCREEN_NAME_SETTING := "addons/scene_manager/loading_screen"
 
 
 func _ready() -> void:
 	get_tree().root.child_entered_tree.connect(_on_child_entered_tree)
 	get_tree().root.child_exiting_tree.connect(_on_child_existing_tree)
 	
-	_packed_loading_screen = load(ProjectSettings.get_setting(LOADING_SCREEN_NAME_SETTING, LOADING_SCREEN_PATH))
+	_packed_loading_screen = load(ProjectSettings.get_setting(LoadingScreenBase.SETTING_NAME, LoadingScreenBase.SETTING_DEFAULT_VALUE))
 
 
 func _process(delta: float) -> void:
@@ -50,6 +43,7 @@ func _process(delta: float) -> void:
 var _loading := false
 var _packed_scene: PackedScene
 var _min_duration_completed := true
+var _loading_scene_path := ""
 var _loading_screen_min_duration := 0.0
 
 var _loading_screen: LoadingScreenBase
@@ -57,6 +51,7 @@ var _packed_loading_screen: PackedScene
 
 ## Show loading screen.
 func _load_scene(path: String, min_duration: float) -> Error:
+	_loading_scene_path = path
 	_loading_screen_min_duration = max(min_duration, 0.0)
 	var error := ResourceLoader.load_threaded_request(path, "PackedScene")
 	if error:
@@ -83,10 +78,10 @@ func _on_scene_loaded(packed_scene: PackedScene) -> Error:
 	
 	_loading = false
 	_packed_scene = null
+	_loading_scene_path = ""
 	_loading_screen_min_duration = 0.0
 	
 	if not packed_scene:
-		_loading_scene_path = ""
 		_loading_scene_properties = {}
 		if _loading_screen:
 			_loading_screen.handle_load_error()
@@ -97,7 +92,6 @@ func _on_scene_loaded(packed_scene: PackedScene) -> Error:
 
 
 #region Change Scene
-var _loading_scene_path := ""
 var _loading_scene_properties := {}
 
 ## Update properties when next scene entered tree.
@@ -119,9 +113,8 @@ func _on_child_existing_tree(node: Node) -> void:
 
 
 ## Change scene using scene file path.[br]
-## Set a positive float on [param min_loading_duration] for background loading.
-## (WIP) Loading screen is pending to add.
-## @experimental
+## Set a positive float on [param min_loading_duration] for using a loading
+## screen.
 func change_scene_to_file(path: String, properties := {}, min_duration := 0.0) -> Error:
 	if path.is_empty() or not ResourceLoader.exists(path):
 		return ERR_DOES_NOT_EXIST
@@ -130,7 +123,6 @@ func change_scene_to_file(path: String, properties := {}, min_duration := 0.0) -
 		push_warning("This scene is already loaded. Use SceneManager.reload_current_scene instead.")
 		return ERR_ALREADY_EXISTS
 	
-	_loading_scene_path = path
 	_loading_scene_properties = properties
 	if min_duration > 0.0:
 		return _load_scene(path, min_duration)
@@ -144,8 +136,6 @@ func change_scene_to_file(path: String, properties := {}, min_duration := 0.0) -
 
 ## Change scene using a packed scene.
 func change_scene_to_packed_scene(packed_scene: PackedScene, properties := {}) -> Error:
-	if packed_scene:
-		_loading_scene_path = packed_scene.resource_path
 	_loading_scene_properties = properties
 	_on_scene_loaded(packed_scene)
 	return OK
@@ -155,10 +145,4 @@ func reload_current_scene(properties := {}) -> Error:
 	_loading_scene_properties = properties
 	var error := get_tree().reload_current_scene()
 	return error
-
-func _reset_data(full := false) -> void:
-	if full:
-		_loading_scene_path = ""
-		_loading_scene_properties = {}
-	_loading_screen_min_duration = 0.0
 #endregion
