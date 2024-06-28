@@ -8,10 +8,12 @@ extends Control
 ## Add a variable which does not exist in second scene to raise a warning.
 @export var test_property_does_not_exist := false
 
-@onready var change_scene_button: Button = $Panel/ChangeSceneButton
+@onready var change_scene_button: Button = $Panel/VBoxContainer/ChangeSceneButton
+@onready var reload_button: Button = $Panel/VBoxContainer/ReloadButton
 
 func _ready() -> void:
 	change_scene_button.pressed.connect(_on_button_pressed)
+	reload_button.pressed.connect(SceneManager.reload_current_scene)
 
 func _on_button_pressed() -> void:
 	var path := "res://addons/scene_manager/test/change_scene/second_scene.tscn"

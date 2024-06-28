@@ -62,24 +62,6 @@ var _loading_scene_properties := {}
 ## PackedScene for the loaded scene. Only used with background loading.
 var _packed_scene: PackedScene
 
-## Updates properties when next scene is entered to the tree. Also adds
-## loading screen instance reference.
-func _on_child_entered_tree(node: Node) -> void:
-	if node is LoadingScreenBase:
-		_loading_screen_instance = node
-	elif node == _packed_scene || node.scene_file_path == _loading_scene_path:
-		for property in _loading_scene_properties:
-			if property in node:
-				node.set(property, _loading_scene_properties[property])
-			else:
-				push_warning("Property '%s' does not exist in %s." % [property, node.to_string()])
-		_reset_loading_properties(LoadingProperties.AFTER)
-
-## Removes loading screen instance reference.
-func _on_child_existing_tree(node: Node) -> void:
-	if node is LoadingScreenBase:
-		_loading_screen_instance = null
-
 ## Changes scene using scene file path.[br]
 ## Sets a positive float on [param min_loading_duration] for using a loading
 ## screen.
@@ -123,8 +105,12 @@ func reload_current_scene(properties := {}) -> Error:
 	if _loading:
 		return FAILED
 	
+	var tree := get_tree()
+	_loading_scene_path = tree.current_scene.scene_file_path
 	_loading_scene_properties = properties
-	var error := get_tree().reload_current_scene()
+	var error := tree.reload_current_scene()
+	if error:
+		_reset_loading_properties(LoadingProperties.AFTER)
 	return error
 
 ## Resets loading properties to default values.
@@ -139,6 +125,24 @@ func _reset_loading_properties(what := LoadingProperties.BOTH) -> void:
 		_packed_scene = null
 		_loading_scene_path = ""
 		_loading_scene_properties = {}
+
+## Updates properties when next scene is entered to the tree. Also adds
+## loading screen instance reference.
+func _on_child_entered_tree(node: Node) -> void:
+	if node is LoadingScreenBase:
+		_loading_screen_instance = node
+	elif node == _packed_scene || node.scene_file_path == _loading_scene_path:
+		for property in _loading_scene_properties:
+			if property in node:
+				node.set_indexed(property, _loading_scene_properties[property])
+			else:
+				push_warning("Property '%s' does not exist in %s." % [property, node.to_string()])
+		_reset_loading_properties(LoadingProperties.AFTER)
+
+## Removes loading screen instance reference.
+func _on_child_existing_tree(node: Node) -> void:
+	if node is LoadingScreenBase:
+		_loading_screen_instance = null
 #endregion
 
 
