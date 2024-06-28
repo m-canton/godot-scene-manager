@@ -134,7 +134,7 @@ func _on_child_entered_tree(node: Node) -> void:
 	elif node == _packed_scene || node.scene_file_path == _loading_scene_path:
 		for property in _loading_scene_properties:
 			if property in node:
-				node.set_indexed(property, _loading_scene_properties[property])
+				node.set(property, _loading_scene_properties[property])
 			else:
 				push_warning("Property '%s' does not exist in %s." % [property, node.to_string()])
 		_reset_loading_properties(LoadingProperties.AFTER)
