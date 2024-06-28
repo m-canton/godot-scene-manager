@@ -5,7 +5,7 @@ class_name LoadingScreenBase extends Control
 ## Extend this class and override methods to create a custom loading screen.
 ## Change "addons/scene_manager/loading_screen" Project setting to load your
 ## scene.[br]
-## You can override [method _get_range_node], [method _get_tween_duration] and
+## You can override [method _get_range_object], [method _get_tween_duration] and
 ## [method handle_load_error] to customize.
 
 ## Loading Screen setting name.

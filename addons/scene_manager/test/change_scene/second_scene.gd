@@ -6,7 +6,6 @@ extends Control
 var scene_label := ""
 var disable_reload_button := false
 
-# Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	$Label.text = scene_label
 	
