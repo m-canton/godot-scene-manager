@@ -14,11 +14,9 @@ extends Control
 @export var test_loading_screen_label_text := ""
 
 @onready var change_scene_button: Button = $Panel/VBoxContainer/ChangeSceneButton
-@onready var reload_button: Button = $Panel/VBoxContainer/ReloadButton
 
 func _ready() -> void:
 	change_scene_button.pressed.connect(_on_button_pressed)
-	reload_button.pressed.connect(SceneManager.reload_current_scene)
 
 func _on_button_pressed() -> void:
 	var path := "res://addons/scene_manager/test/change_scene/second_scene.tscn"

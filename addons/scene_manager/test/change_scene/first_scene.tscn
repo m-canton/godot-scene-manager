@@ -44,4 +44,5 @@ with Loading Screen"
 
 [node name="ReloadButton" type="Button" parent="Panel/VBoxContainer"]
 layout_mode = 2
+disabled = true
 text = "Reload"

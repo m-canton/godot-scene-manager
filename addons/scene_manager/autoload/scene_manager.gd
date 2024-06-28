@@ -14,9 +14,9 @@ extends Node
 ## Enum used to reset inner variables.
 enum LoadingProperties {
 	ALL, ## All the variables.
+	LOADING_SCREEN_AFTER, ## After adding the loading screen scene.
 	BEFORE, ## When scene is loaded.
 	AFTER, ## After adding the loaded scene.
-	LOADING_SCREEN_AFTER, ## After adding the loading screen scene.
 }
 
 

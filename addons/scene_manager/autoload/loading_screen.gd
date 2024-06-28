@@ -17,10 +17,12 @@ const SETTING_DEFAULT_VALUE := "res://addons/scene_manager/autoload/loading_scre
 var _range_tween: Tween
 
 #region Overrideable methods
-## Range node to show the progress. Override the method to change the node.[br]
-## This node must have [code]value[/code] property to show the progress.
-func _get_range_node() -> Node:
-	return get_node("ProgressBar")
+## An object with a [code]value[/code] property to update with float values
+## between 0.0 and 100.0 with [method set_progress]. Override the method to
+## change the object.[br]
+## Return null to not use this feature.
+func _get_range_object() -> Object:
+	return get_node_or_null("ProgressBar")
 
 ## Time it takes to reach the new value. Override the method to change the
 ## value. If the value is 0.0 or negative, it sets property immediately.
@@ -36,17 +38,20 @@ func handle_load_error() -> void:
 ## Percent must be a value between 0.0 and 100.0. Ensure your custom range
 ## node has a [code]value[/code] property with float values between 0 and 100.
 func set_progress(percent: float) -> void:
+	var range := _get_range_object()
+	if not range:
+		return
+	
 	var tween_duration := _get_tween_duration()
 	
-	var range := _get_range_node()
 	if "value" in range:
 		if tween_duration > 0.0:
 			if _range_tween and _range_tween.is_running():
 				_range_tween.kill()
 			
-			_range_tween = range.create_tween()
+			_range_tween = self.create_tween()
 			_range_tween.tween_property(range, "value", percent, tween_duration)
 		else:
 			range.value = percent
 	else:
-		push_warning("'value' property doesn't exist.")
+		push_warning("'value' property doesn't exist in %s." % range.to_string())
