@@ -8,6 +8,10 @@
 
 config_version=5
 
+[addons]
+
+scene_manager/loading_screen="res://addons/scene_manager/test/custom_loading_screen/loading_screen.tscn"
+
 [application]
 
 config/name="SceneManager"
