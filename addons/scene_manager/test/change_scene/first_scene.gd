@@ -32,4 +32,4 @@ func _on_button_pressed() -> void:
 	if (not test_loading_screen_label_text.is_empty()):
 		loading_properties["label_text"] = test_loading_screen_label_text
 	
-	SceneManager.change_scene_to_file(path, properties, test_background_loading_min_duration, loading_properties)
+	get_node("/root/SceneManager").change_scene_to_file(path, properties, test_background_loading_min_duration, loading_properties)
