@@ -3,7 +3,9 @@ extends Control
 @export_group("Test", "test_")
 ## Loading screen minimum duration.
 @export_range(0.0, 3.0) var test_background_loading_min_duration := 0.5
+## Text shown on second scene.
 @export var test_second_scene_label_text := "My cool scene!"
+## Add a variable which does not exist in second scene to raise a warning.
 @export var test_property_does_not_exist := false
 
 @onready var change_scene_button: Button = $Panel/ChangeSceneButton
