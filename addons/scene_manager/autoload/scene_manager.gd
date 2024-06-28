@@ -15,7 +15,8 @@ extends Node
 enum LoadingProperties {
 	BEFORE,
 	AFTER,
-	BOTH,
+	ALL,
+	LOADING_SCREEN_AFTER,
 }
 
 
@@ -63,9 +64,10 @@ var _loading_scene_properties := {}
 var _packed_scene: PackedScene
 
 ## Changes scene using scene file path.[br]
-## Sets a positive float on [param min_loading_duration] for using a loading
-## screen.
-func change_scene_to_file(path: String, properties := {}, min_duration := 0.0) -> Error:
+## Sets a positive float on [param min_duration] for using a loading
+## screen. You can set properties in loading screen with
+## [param loading_properties].
+func change_scene_to_file(path: String, properties := {}, min_duration := 0.0, loading_properties := {}) -> Error:
 	if _loading:
 		return FAILED
 	
@@ -79,6 +81,7 @@ func change_scene_to_file(path: String, properties := {}, min_duration := 0.0) -
 	
 	_loading_scene_properties = properties
 	if min_duration > 0.0:
+		_loading_screen_properties = loading_properties
 		return _load_scene(path, min_duration)
 	
 	var error := tree.change_scene_to_file(path)
@@ -114,14 +117,17 @@ func reload_current_scene(properties := {}) -> Error:
 	return error
 
 ## Resets loading properties to default values.
-func _reset_loading_properties(what := LoadingProperties.BOTH) -> void:
-	if what == LoadingProperties.BOTH || what == LoadingProperties.BEFORE:
+func _reset_loading_properties(what := LoadingProperties.ALL) -> void:
+	if what == LoadingProperties.ALL || what == LoadingProperties.BEFORE:
 		_loading = false
 		_loading_screen_instance = null
 		_loading_screen_min_duration = 0.0
 		_min_duration_completed = true
 	
-	if what == LoadingProperties.BOTH || what == LoadingProperties.AFTER:
+	if what == LoadingProperties.ALL || what == LoadingProperties.LOADING_SCREEN_AFTER:
+		_loading_screen_properties = {}
+	
+	if what == LoadingProperties.ALL || what == LoadingProperties.AFTER:
 		_packed_scene = null
 		_loading_scene_path = ""
 		_loading_scene_properties = {}
@@ -129,15 +135,22 @@ func _reset_loading_properties(what := LoadingProperties.BOTH) -> void:
 ## Updates properties when next scene is entered to the tree. Also adds
 ## loading screen instance reference.
 func _on_child_entered_tree(node: Node) -> void:
+	var properties := {}
 	if node is LoadingScreenBase:
 		_loading_screen_instance = node
+		properties = _loading_screen_properties
+		_reset_loading_properties(LoadingProperties.LOADING_SCREEN_AFTER)
 	elif node == _packed_scene || node.scene_file_path == _loading_scene_path:
-		for property in _loading_scene_properties:
-			if property in node:
-				node.set(property, _loading_scene_properties[property])
-			else:
-				push_warning("Property '%s' does not exist in %s." % [property, node.to_string()])
+		properties = _loading_scene_properties
 		_reset_loading_properties(LoadingProperties.AFTER)
+	else:
+		return
+	
+	for property in properties:
+		if property in node:
+			node.set(property, properties[property])
+		else:
+			push_warning("Property '%s' does not exist in %s." % [property, node.to_string()])
 
 ## Removes loading screen instance reference.
 func _on_child_existing_tree(node: Node) -> void:
@@ -150,6 +163,9 @@ func _on_child_existing_tree(node: Node) -> void:
 ## Indicates whether a scene is currently being loaded.[br]
 ## Only used with background loading.
 var _loading := false
+## Loading screen properties. When the loading screen scene enters to the tree,
+## this properties are set.
+var _loading_screen_properties := {}
 ## Minimum duration (in seconds) that the loading screen should be displayed.[br]
 ## If this is [code]0.0[/code], the packed scene is not background loaded.
 var _loading_screen_min_duration := 0.0
@@ -157,7 +173,6 @@ var _loading_screen_min_duration := 0.0
 ## process.[br]
 ## Only used with background loading.
 var _min_duration_completed := true
-
 ## Current loading screen instance.
 var _loading_screen_instance: LoadingScreenBase
 ## PackedScene for the loading screen.
@@ -193,7 +208,7 @@ func _on_scene_loaded(packed_scene: PackedScene) -> Error:
 	if packed_scene:
 		_reset_loading_properties(LoadingProperties.BEFORE)
 	else:
-		_reset_loading_properties(LoadingProperties.BOTH)
+		_reset_loading_properties(LoadingProperties.ALL)
 		if _loading_screen_instance:
 			_loading_screen_instance.handle_load_error()
 		return FAILED

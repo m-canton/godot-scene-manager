@@ -7,6 +7,11 @@ extends Control
 @export var test_second_scene_label_text := "My cool scene!"
 ## Add a variable which does not exist in second scene to raise a warning.
 @export var test_property_does_not_exist := false
+## label_text value for loading screen. You must use
+## scene_manager/test/custom_loading_screen/loading_screen.tscn
+## as your loading screen in project settings or other LoadinScreenBase with
+## this property.
+@export var test_loading_screen_label_text := ""
 
 @onready var change_scene_button: Button = $Panel/VBoxContainer/ChangeSceneButton
 @onready var reload_button: Button = $Panel/VBoxContainer/ReloadButton
@@ -25,4 +30,8 @@ func _on_button_pressed() -> void:
 	if (test_property_does_not_exist):
 		properties["cool"] = "does not exist"
 	
-	SceneManager.change_scene_to_file(path, properties, test_background_loading_min_duration)
+	var loading_properties := {}
+	if (not test_loading_screen_label_text.is_empty()):
+		loading_properties["label_text"] = test_loading_screen_label_text
+	
+	SceneManager.change_scene_to_file(path, properties, test_background_loading_min_duration, loading_properties)
