@@ -11,12 +11,12 @@ extends Node
 ## 
 ## @tutorial(GitHub Repository): https://github.com/m-canton/godot-scene-manager
 
-
+## Enum used to reset inner variables.
 enum LoadingProperties {
-	BEFORE,
-	AFTER,
-	ALL,
-	LOADING_SCREEN_AFTER,
+	ALL, ## All the variables.
+	BEFORE, ## When scene is loaded.
+	AFTER, ## After adding the loaded scene.
+	LOADING_SCREEN_AFTER, ## After adding the loading screen scene.
 }
 
 
