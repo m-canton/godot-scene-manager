@@ -95,7 +95,7 @@ func change_scene_to_file(path: String, properties := {}, min_duration := 0.0, l
 	return OK
 
 ## Changes scene using a packed scene.
-func change_scene_to_packed_scene(packed_scene: PackedScene, properties := {}) -> Error:
+func change_scene_to_packed(packed_scene: PackedScene, properties := {}) -> Error:
 	if _loading:
 		return FAILED
 	
