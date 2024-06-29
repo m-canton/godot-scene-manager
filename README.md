@@ -11,7 +11,9 @@ Look [test folder](https://github.com/m-canton/godot-scene-manager/tree/main/add
 ```gdscript
 SceneManager.change_scene_to_file("your_tscn_file_path", {
     my_next_scene_property = "A value",
-}, 1.0)
+}, 1.0, {
+    a_loading_screen_property = "Other value",
+})
 ```
 
 ## Install
