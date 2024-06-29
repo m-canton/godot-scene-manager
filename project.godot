@@ -15,7 +15,7 @@ config/tags=PackedStringArray("plugin")
 run/main_scene="res://addons/scene_manager/test/change_scene/first_scene.tscn"
 config/features=PackedStringArray("4.3", "Mobile")
 boot_splash/fullsize=false
-config/icon="res://icon.png"
+config/icon="res://icon.webp"
 
 [autoload]
 

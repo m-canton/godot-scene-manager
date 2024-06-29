@@ -11,16 +11,10 @@ extends Node
 ## 
 ## @tutorial(GitHub Repository): https://github.com/m-canton/godot-scene-manager
 
-## Enum used to reset inner variables.
-enum LoadingProperties {
-	ALL, ## All the variables.
-	LOADING_SCREEN_AFTER, ## After adding the loading screen scene.
-	BEFORE, ## When scene is loaded.
-	AFTER, ## After adding the loaded scene.
-}
-
 
 func _ready() -> void:
+	set_process(false)
+	
 	get_tree().root.child_entered_tree.connect(_on_child_entered_tree)
 	get_tree().root.child_exiting_tree.connect(_on_child_existing_tree)
 	
@@ -160,6 +154,14 @@ func _on_child_existing_tree(node: Node) -> void:
 
 
 #region Background Loading Screen
+## Enum used to reset inner variables.
+enum LoadingProperties {
+	ALL, ## All the variables.
+	LOADING_SCREEN_AFTER, ## After adding the loading screen scene.
+	BEFORE, ## When scene is loaded.
+	AFTER, ## After adding the loaded scene.
+}
+
 ## Indicates whether a scene is currently being loaded.[br]
 ## Only used with background loading.
 var _loading := false
@@ -188,10 +190,11 @@ func _load_scene(path: String, min_duration: float) -> Error:
 		_on_scene_loaded(null)
 		return error
 	
+	_loading = true
 	_min_duration_completed = false
+	set_process(true)
 	
 	get_tree().change_scene_to_packed(_loading_screen_packed_scene)
-	_loading = true
 	return OK
 
 ## Sets loading screen progress.
@@ -204,6 +207,8 @@ func _on_scene_loaded(packed_scene: PackedScene) -> Error:
 	_packed_scene = packed_scene
 	if packed_scene and not _min_duration_completed:
 		return OK
+	
+	set_process(false)
 	
 	if packed_scene:
 		_reset_loading_properties(LoadingProperties.BEFORE)
