@@ -42,7 +42,17 @@ layout_mode = 2
 text = "Change Scene to Second
 with Loading Screen"
 
-[node name="ReloadButton" type="Button" parent="Panel/VBoxContainer"]
+[node name="PackedSceneButton" type="Button" parent="Panel/VBoxContainer"]
 layout_mode = 2
-disabled = true
-text = "Reload"
+text = "Use PackedScene"
+
+[node name="Label" type="Label" parent="Panel"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -20.0
+offset_right = 20.0
+offset_bottom = 23.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 48
