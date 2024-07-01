@@ -44,8 +44,8 @@ func _on_button_pressed(use_packed_scene: bool) -> void:
 	
 	if test_append_dependency:
 		properties["loading_dependency"] = [
-			SceneManager.append_dependency("res://addons/scene_manager/test/custom_loading_screen/loading_screen.gd"),
-			SceneManager.append_dependency("res://addons/scene_manager/test/change_scene/first_scene.tscn"),
+			get_node("/root/SceneManager").append_dependency("res://addons/scene_manager/test/custom_loading_screen/loading_screen.gd"),
+			get_node("/root/SceneManager").append_dependency("res://addons/scene_manager/test/change_scene/first_scene.tscn"),
 		]
 	
 	var loading_properties := {}
