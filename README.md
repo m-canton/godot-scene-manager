@@ -1,6 +1,6 @@
 # godot-scene-manager
 
-Scene Manager Plugin for Godot 4.3
+Scene Manager Plugin for Godot 4.2+.
 
 ## Features
 
@@ -9,9 +9,12 @@ SceneManager autoload has three methods called `change_scene_to_file`, `change_s
 Look [test folder](https://github.com/m-canton/godot-scene-manager/tree/main/addons/scene_manager/test) and [wiki](https://github.com/m-canton/godot-scene-manager/wiki) to see some examples. Simple use:
 
 ```gdscript
-SceneManager.change_scene_to_file("your_tscn_file_path", {
-    my_next_scene_property = "A value",
-}, 1.0, {
+var ref := SceneManager.append_dependency("my_character_data.tres")
+SceneManager.change_scene_to_file("my_scene.tscn", {
+    next_scene_characters_property = [
+        ref,
+    ],
+}, 1.0, , {
     a_loading_screen_property = "Other value",
 })
 ```
