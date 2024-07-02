@@ -7,6 +7,8 @@ class_name LoadingScreenBase extends Control
 ## scene.[br]
 ## You can override [method _get_range_object], [method _get_tween_duration] and
 ## [method handle_load_error] to customize.
+## 
+## @tutorial(Wiki): https://github.com/m-canton/godot-scene-manager/wiki
 
 ## Loading Screen setting name.
 const SETTING_NAME := "addons/scene_manager/loading_screen"

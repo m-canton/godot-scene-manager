@@ -9,7 +9,7 @@ extends Node
 ## [b]Note:[/b] Using [LoadingScreenBase] for other purposes may break the
 ## loading functionality.
 ## 
-## @tutorial(GitHub Repository): https://github.com/m-canton/godot-scene-manager
+## @tutorial(Wiki): https://github.com/m-canton/godot-scene-manager/wiki
 
 
 func _ready() -> void:

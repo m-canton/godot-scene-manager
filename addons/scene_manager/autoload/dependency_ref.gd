@@ -3,12 +3,10 @@ class_name LoadingScreenDependencyRef extends RefCounted
 ## LoadingScreen Dependency Reference
 ## 
 ## Class used by SceneManager to load resources and use them as properties.
+## 
+## @tutorial(Wiki): https://github.com/m-canton/godot-scene-manager/wiki
 
-## Resource path.
-var path := ""
-## Resource type hint.
-var type_hint := ""
-## Indicates the resource is loaded.
-var loaded := false
-## Resource instance.
-var value: Variant = null
+var path := "" ## Resource path.
+var type_hint := "" ## Resource type hint. See [method ResourceLoader.load]
+var loaded := false ## Indicates the resource is loaded.
+var value: Resource = null ## Loaded resource.
