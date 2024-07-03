@@ -4,9 +4,9 @@ extends Node
 ## 
 ## This autoload allows to change scenes and set properties when instance is
 ## created.[br]
-## This autload uses [LoadingScreenBase] for background loading. You can
+## This autload uses [LoadingScreen] for background loading. You can
 ## extend this class to make a custom loading screen.[br]
-## [b]Note:[/b] Using [LoadingScreenBase] for other purposes may break the
+## [b]Note:[/b] Using [LoadingScreen] for other purposes may break the
 ## loading functionality.
 ## 
 ## @tutorial(Wiki): https://github.com/m-canton/godot-scene-manager/wiki
@@ -15,7 +15,7 @@ extends Node
 #region Virtual Methods
 func _ready() -> void:
 	set_process(false)
-	set_loading_screen(ProjectSettings.get_setting(LoadingScreenBase.SETTING_NAME, LoadingScreenBase.SETTING_DEFAULT_VALUE), LoadingScreenType.DEFAULT)
+	set_loading_screen(ProjectSettings.get_setting(LoadingScreen.SETTING_NAME, LoadingScreen.SETTING_DEFAULT_VALUE), LoadingScreen.Type.DEFAULT)
 	
 	get_tree().root.child_entered_tree.connect(_on_child_entered_tree)
 	get_tree().root.child_exiting_tree.connect(_on_child_existing_tree)
@@ -172,7 +172,7 @@ func _reset_loading_properties(what := LoadingProperties.ALL) -> void:
 ## loading screen instance reference.
 func _on_child_entered_tree(node: Node) -> void:
 	var properties := {}
-	if node is LoadingScreenBase:
+	if node is LoadingScreen:
 		_loading_screen = node
 		properties = _loading_screen_properties
 		_reset_loading_properties(LoadingProperties.LOADING_SCREEN_AFTER)
@@ -190,18 +190,12 @@ func _on_child_entered_tree(node: Node) -> void:
 
 ## Removes loading screen instance reference.
 func _on_child_existing_tree(node: Node) -> void:
-	if node is LoadingScreenBase:
+	if node is LoadingScreen:
 		_loading_screen = null
 #endregion
 
 
 #region Loading Screen
-enum LoadingScreenType {
-	DEFAULT,
-	PERSIST,
-	ONE_SHOT,
-}
-
 ## Indicates whether a scene is currently being loaded.[br]
 ## Only used with background loading.
 var _loading := false
@@ -216,7 +210,7 @@ var _loading_screen_min_duration := 0.0
 ## Only used with background loading.
 var _min_duration_completed := true
 ## Current loading screen instance.
-var _loading_screen: LoadingScreenBase
+var _loading_screen: LoadingScreen
 ## Default loading screen PackedScene.
 var _default_packed_loading_screen: PackedScene
 ## Current loading screen PackedScene.
@@ -230,21 +224,21 @@ var _valid_properties := []
 ## See [member _loading_dependencies].
 var _dependencies_are_loaded := true
 
-## Sets current loading screen. See [method set_lodaing_screen_from_packed].
-func set_loading_screen(path: String, type := LoadingScreenType.ONE_SHOT) -> void:
+## Sets current loading screen. See [method set_loading_screen_from_packed].
+func set_loading_screen(path: String, type := LoadingScreen.Type.ONE_SHOT) -> void:
 	set_loading_screen_from_packed(load(path), type)
 
 ## Sets current loading screen. You can change the default loading screen or
 ## keeps it for other subsequent loads by changing [param type] param. To set
 ## the default scene, you can use the reset_loading_screen method.
-func set_loading_screen_from_packed(packed_scene: PackedScene, type := LoadingScreenType.ONE_SHOT) -> void:
+func set_loading_screen_from_packed(packed_scene: PackedScene, type := LoadingScreen.Type.ONE_SHOT) -> void:
 	if not packed_scene:
 		push_error("'packed_scene' cannot be null. Use SceneManager.reset_loading_screen to set the default loading screen.")
 	
-	if type == LoadingScreenType.DEFAULT:
+	if type == LoadingScreen.Type.DEFAULT:
 		_default_packed_loading_screen = packed_scene
 	
-	_loading_screen_persistent = type == LoadingScreenType.PERSIST
+	_loading_screen_persistent = type == LoadingScreen.Type.PERSIST
 	
 	_packed_loading_screen = packed_scene
 

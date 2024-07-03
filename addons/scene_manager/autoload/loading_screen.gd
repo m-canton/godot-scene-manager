@@ -1,4 +1,4 @@
-class_name LoadingScreenBase extends Control
+class_name LoadingScreen extends Control
 
 ## LoadingScreen base class
 ## 
@@ -14,6 +14,12 @@ class_name LoadingScreenBase extends Control
 const SETTING_NAME := "addons/scene_manager/loading_screen"
 ## Default Loading Screen scene path.
 const SETTING_DEFAULT_VALUE := "res://addons/scene_manager/autoload/loading_screen.tscn"
+
+enum Type {
+	DEFAULT,
+	PERSIST,
+	ONE_SHOT,
+}
 
 ## Property used to store the tween which does smooth progress change.
 var _range_tween: Tween

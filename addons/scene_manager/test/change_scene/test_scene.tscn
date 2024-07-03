@@ -148,7 +148,7 @@ selected = 0
 popup/item_0/text = "Path"
 popup/item_0/id = 1
 popup/item_1/text = "Packed Scene"
-popup/item_1/id = 0
+popup/item_1/id = 1
 
 [node name="MessageControl" type="VBoxContainer" parent="ColorRect/VBoxContainer/MarginContainer/PanelContainer/VBoxContainer/ChageSceneContainer/Controls"]
 layout_mode = 2
@@ -223,6 +223,7 @@ layout_mode = 2
 
 [node name="AppendResourcesControl" type="HBoxContainer" parent="ColorRect/VBoxContainer/MarginContainer/PanelContainer/VBoxContainer/LoadingScreenContainer"]
 layout_mode = 2
+tooltip_text = "They are loaded and properties parsed if minimum duration > 0"
 
 [node name="Label" type="Label" parent="ColorRect/VBoxContainer/MarginContainer/PanelContainer/VBoxContainer/LoadingScreenContainer/AppendResourcesControl"]
 layout_mode = 2

@@ -1,4 +1,4 @@
-extends LoadingScreenBase
+extends LoadingScreen
 
 # Set the scene path in project settings for testing this custom loading screen.
 

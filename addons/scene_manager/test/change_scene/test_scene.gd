@@ -38,7 +38,7 @@ func _on_button_pressed() -> void:
 		return
 	
 	if loading_screen_scene_option_button.selected == 1:
-		get_node("/root/SceneManager").set_loading_screen("res://addons/scene_manager/test/custom_loading_screen/loading_screen.tscn", get_node("/root/SceneManager").LoadingScreenType.PERSIST)
+		get_node("/root/SceneManager").set_loading_screen("res://addons/scene_manager/test/custom_loading_screen/loading_screen.tscn", LoadingScreen.Type.PERSIST)
 	else:
 		get_node("/root/SceneManager").reset_loading_screen()
 	
