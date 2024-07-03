@@ -1,4 +1,4 @@
-class_name LoadingScreenDependencyRef extends RefCounted
+class_name SceneManagerResourceRef extends RefCounted
 
 ## LoadingScreen Dependency Reference
 ## 

@@ -2,11 +2,11 @@ extends LoadingScreenBase
 
 # Set the scene path in project settings for testing this custom loading screen.
 
-var label_text := "Set your text!"
+var message := "Set your text!"
 @onready var label: Label = $Label
 
 func _ready() -> void:
-	label.text = label_text
+	label.text = message
 
 func _get_tween_duration() -> float:
 	return 0.0 # no tween

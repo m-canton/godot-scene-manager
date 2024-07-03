@@ -1,0 +1,250 @@
+[gd_scene load_steps=8 format=3 uid="uid://cpbrjmfmh8i6y"]
+
+[ext_resource type="Script" path="res://addons/scene_manager/test/change_scene/test_scene.gd" id="1_25ww6"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2it28"]
+content_margin_left = 20.0
+content_margin_top = 8.0
+content_margin_right = 20.0
+content_margin_bottom = 13.0
+bg_color = Color(0.14902, 0.168627, 0.203922, 1)
+border_width_bottom = 5
+border_color = Color(0.211765, 0.239216, 0.290196, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mt4t1"]
+content_margin_left = 15.0
+content_margin_top = 15.0
+content_margin_right = 15.0
+content_margin_bottom = 15.0
+bg_color = Color(0.14902, 0.168627, 0.203922, 1)
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color(0.211765, 0.239216, 0.290196, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_obii3"]
+bg_color = Color(0.14902, 0.168627, 0.203922, 1)
+
+[sub_resource type="Theme" id="Theme_25wr8"]
+PopupPanel/styles/panel = SubResource("StyleBoxFlat_obii3")
+
+[sub_resource type="GDScript" id="GDScript_kihbh"]
+script/source = "extends VBoxContainer
+
+
+var _label_text := \"\"
+
+@onready var label = $Label
+@onready var h_slider = $HSlider
+
+func _ready():
+	_label_text = label.text
+	_on_value_changed(h_slider.value)
+	h_slider.value_changed.connect(_on_value_changed)
+
+
+func _on_value_changed(value: float) -> void:
+	label.text = _label_text + \" (\" + str(value) + \")\"
+"
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_slqgx"]
+content_margin_left = 9.0
+content_margin_top = 3.0
+content_margin_right = 9.0
+content_margin_bottom = 3.0
+bg_color = Color(0.14902, 0.168627, 0.203922, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.211765, 0.239216, 0.290196, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+
+[node name="TestScene" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_25ww6")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.117647, 0.129412, 0.160784, 1)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ColorRect"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 20
+
+[node name="Label" type="Label" parent="ColorRect/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+theme_override_styles/normal = SubResource("StyleBoxFlat_2it28")
+text = "Test Scene"
+
+[node name="MarginContainer" type="MarginContainer" parent="ColorRect/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 30
+theme_override_constants/margin_bottom = 0
+
+[node name="PanelContainer" type="PanelContainer" parent="ColorRect/VBoxContainer/MarginContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_mt4t1")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ColorRect/VBoxContainer/MarginContainer/PanelContainer"]
+layout_mode = 2
+theme_override_constants/separation = 24
+
+[node name="ChageSceneContainer" type="VBoxContainer" parent="ColorRect/VBoxContainer/MarginContainer/PanelContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Label" type="Label" parent="ColorRect/VBoxContainer/MarginContainer/PanelContainer/VBoxContainer/ChageSceneContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Change Scene"
+horizontal_alignment = 1
+
+[node name="Controls" type="HBoxContainer" parent="ColorRect/VBoxContainer/MarginContainer/PanelContainer/VBoxContainer/ChageSceneContainer"]
+layout_mode = 2
+theme_override_constants/separation = 24
+
+[node name="SourceControl" type="VBoxContainer" parent="ColorRect/VBoxContainer/MarginContainer/PanelContainer/VBoxContainer/ChageSceneContainer/Controls"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="ColorRect/VBoxContainer/MarginContainer/PanelContainer/VBoxContainer/ChageSceneContainer/Controls/SourceControl"]
+layout_mode = 2
+text = "Source"
+
+[node name="OptionButton" type="OptionButton" parent="ColorRect/VBoxContainer/MarginContainer/PanelContainer/VBoxContainer/ChageSceneContainer/Controls/SourceControl"]
+layout_mode = 2
+theme = SubResource("Theme_25wr8")
+item_count = 2
+selected = 0
+popup/item_0/text = "Path"
+popup/item_0/id = 1
+popup/item_1/text = "Packed Scene"
+popup/item_1/id = 0
+
+[node name="MessageControl" type="VBoxContainer" parent="ColorRect/VBoxContainer/MarginContainer/PanelContainer/VBoxContainer/ChageSceneContainer/Controls"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="ColorRect/VBoxContainer/MarginContainer/PanelContainer/VBoxContainer/ChageSceneContainer/Controls/MessageControl"]
+layout_mode = 2
+text = "Message"
+
+[node name="LineEdit" type="LineEdit" parent="ColorRect/VBoxContainer/MarginContainer/PanelContainer/VBoxContainer/ChageSceneContainer/Controls/MessageControl"]
+layout_mode = 2
+text = "Hello World!"
+
+[node name="LoadingScreenContainer" type="VBoxContainer" parent="ColorRect/VBoxContainer/MarginContainer/PanelContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Label" type="Label" parent="ColorRect/VBoxContainer/MarginContainer/PanelContainer/VBoxContainer/LoadingScreenContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Loading Screen"
+horizontal_alignment = 1
+
+[node name="Controls" type="HBoxContainer" parent="ColorRect/VBoxContainer/MarginContainer/PanelContainer/VBoxContainer/LoadingScreenContainer"]
+layout_mode = 2
+theme_override_constants/separation = 24
+
+[node name="SceneControl" type="VBoxContainer" parent="ColorRect/VBoxContainer/MarginContainer/PanelContainer/VBoxContainer/LoadingScreenContainer/Controls"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="ColorRect/VBoxContainer/MarginContainer/PanelContainer/VBoxContainer/LoadingScreenContainer/Controls/SceneControl"]
+layout_mode = 2
+text = "Scene"
+
+[node name="OptionButton" type="OptionButton" parent="ColorRect/VBoxContainer/MarginContainer/PanelContainer/VBoxContainer/LoadingScreenContainer/Controls/SceneControl"]
+layout_mode = 2
+item_count = 2
+selected = 0
+popup/item_0/text = "Default"
+popup/item_0/id = 0
+popup/item_1/text = "Custom"
+popup/item_1/id = 1
+
+[node name="MinDurationControl" type="VBoxContainer" parent="ColorRect/VBoxContainer/MarginContainer/PanelContainer/VBoxContainer/LoadingScreenContainer/Controls"]
+layout_mode = 2
+size_flags_horizontal = 3
+script = SubResource("GDScript_kihbh")
+
+[node name="Label" type="Label" parent="ColorRect/VBoxContainer/MarginContainer/PanelContainer/VBoxContainer/LoadingScreenContainer/Controls/MinDurationControl"]
+layout_mode = 2
+text = "Minimum Duration"
+
+[node name="HSlider" type="HSlider" parent="ColorRect/VBoxContainer/MarginContainer/PanelContainer/VBoxContainer/LoadingScreenContainer/Controls/MinDurationControl"]
+layout_mode = 2
+size_flags_vertical = 6
+max_value = 3.0
+step = 0.25
+value = 0.5
+
+[node name="MessageControl" type="VBoxContainer" parent="ColorRect/VBoxContainer/MarginContainer/PanelContainer/VBoxContainer/LoadingScreenContainer/Controls"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="ColorRect/VBoxContainer/MarginContainer/PanelContainer/VBoxContainer/LoadingScreenContainer/Controls/MessageControl"]
+layout_mode = 2
+text = "Message"
+
+[node name="LineEdit" type="LineEdit" parent="ColorRect/VBoxContainer/MarginContainer/PanelContainer/VBoxContainer/LoadingScreenContainer/Controls/MessageControl"]
+layout_mode = 2
+
+[node name="AppendResourcesControl" type="HBoxContainer" parent="ColorRect/VBoxContainer/MarginContainer/PanelContainer/VBoxContainer/LoadingScreenContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="ColorRect/VBoxContainer/MarginContainer/PanelContainer/VBoxContainer/LoadingScreenContainer/AppendResourcesControl"]
+layout_mode = 2
+text = "Append Test Resources"
+
+[node name="CheckButton" type="CheckButton" parent="ColorRect/VBoxContainer/MarginContainer/PanelContainer/VBoxContainer/LoadingScreenContainer/AppendResourcesControl"]
+layout_mode = 2
+button_pressed = true
+
+[node name="ChangeSceneButton" type="Button" parent="ColorRect/VBoxContainer/MarginContainer/PanelContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+text = "Change Scene"
+
+[node name="MessageMarginContainer" type="MarginContainer" parent="ColorRect/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 0
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 30
+theme_override_constants/margin_bottom = 16
+
+[node name="MessageLabel" type="Label" parent="ColorRect/VBoxContainer/MessageMarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 8
+theme_override_styles/normal = SubResource("StyleBoxFlat_slqgx")

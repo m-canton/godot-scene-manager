@@ -1,9 +1,13 @@
 @tool
 extends EditorPlugin
 
+var _export_plugin: EditorExportPlugin
 
 func _enter_tree() -> void:
 	add_autoload_singleton("SceneManager", "res://addons/scene_manager/autoload/scene_manager.gd")
+	
+	_export_plugin = preload("res://addons/scene_manager/editor/export.gd").new()
+	add_export_plugin(_export_plugin)
 	
 	#region Settings
 	if not ProjectSettings.has_setting(LoadingScreenBase.SETTING_NAME):
@@ -21,3 +25,6 @@ func _enter_tree() -> void:
 
 func _exit_tree() -> void:
 	remove_autoload_singleton("SceneManager")
+	
+	remove_export_plugin(_export_plugin)
+	_export_plugin = null
