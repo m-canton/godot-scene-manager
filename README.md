@@ -9,7 +9,7 @@ SceneManager autoload has three methods called `change_scene_to_file`, `change_s
 Look [test folder](https://github.com/m-canton/godot-scene-manager/tree/main/addons/scene_manager/test) and [wiki](https://github.com/m-canton/godot-scene-manager/wiki) to see some examples. Simple use:
 
 ```gdscript
-var ref := SceneManager.append_dependency("my_character_data.tres")
+var ref := SceneManager.append_resource("my_character_data.tres")
 SceneManager.change_scene_to_file("my_scene.tscn", {
     next_scene_characters_property = [
         ref,
