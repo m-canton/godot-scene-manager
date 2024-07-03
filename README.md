@@ -14,7 +14,7 @@ SceneManager.change_scene_to_file("my_scene.tscn", {
     next_scene_characters_property = [
         ref,
     ],
-}, 1.0, , {
+}, 1.0, {
     a_loading_screen_property = "Other value",
 })
 ```
