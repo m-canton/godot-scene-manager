@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://addons/scene_manager/test/change_scene/other_scene.gd" id="1_7i23x"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_soxly"]
-bg_color = Color(0.211765, 0.239216, 0.290196, 1)
+bg_color = Color(0.14902, 0.168627, 0.203922, 1)
 
 [node name="SecondScene" type="Control"]
 layout_mode = 3
@@ -23,7 +23,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_soxly")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Panel"]
+[node name="ChangeSceneButton" type="Button" parent="Panel"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -31,20 +31,12 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -95.0
-offset_top = -33.0
+offset_top = -27.0
 offset_right = 95.0
-offset_bottom = 33.0
+offset_bottom = 27.0
 grow_horizontal = 2
 grow_vertical = 2
-
-[node name="ChangeSceneButton" type="Button" parent="Panel/VBoxContainer"]
-layout_mode = 2
-text = "Change Scene to First
-without Loading Screen"
-
-[node name="ReloadButton" type="Button" parent="Panel/VBoxContainer"]
-layout_mode = 2
-text = "Reload"
+text = "First Scene"
 
 [node name="Label" type="Label" parent="."]
 layout_mode = 1

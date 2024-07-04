@@ -9,14 +9,21 @@ var message := ""
 @onready var loading_screen_scene_option_button: OptionButton = %LoadingScreenContainer/Controls/SceneControl/OptionButton
 @onready var loading_screen_min_duration_slider: HSlider = %LoadingScreenContainer/Controls/MinDurationControl/HSlider
 @onready var loading_screen_message_line_edit: LineEdit = %LoadingScreenContainer/Controls/MessageControl/LineEdit
-@onready var loading_screen_append_resources_check_button: CheckButton = $ColorRect/VBoxContainer/MarginContainer/PanelContainer/VBoxContainer/LoadingScreenContainer/AppendResourcesControl/CheckButton
+@onready var loading_screen_append_resources_check_button: CheckButton = %LoadingScreenContainer/AppendResourcesControl/CheckButton
 
-@onready var change_scene_button: Button = $ColorRect/VBoxContainer/MarginContainer/PanelContainer/VBoxContainer/ChangeSceneButton
+@onready var reload_scene_button = $ColorRect/VBoxContainer/MessageMarginContainer/VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer/ReloadSceneButton
+@onready var change_scene_button: Button = $ColorRect/VBoxContainer/MessageMarginContainer/VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer/ChangeSceneButton
 
-@onready var message_label = $ColorRect/VBoxContainer/MessageMarginContainer/MessageLabel
+@onready var message_label: Label = $ColorRect/VBoxContainer/MessageMarginContainer/VBoxContainer/MessageLabel
 
 func _ready() -> void:
-	message_label.text = message
+	var style_box: StyleBoxFlat = message_label.get_theme_stylebox("normal")
+	style_box.bg_color = Color("#262b34")
+	if not message.is_empty():
+		var tween := create_tween()
+		message_label.text = message
+		tween.tween_property(style_box, "bg_color", Color("#cf641c"), 0.1)
+		tween.tween_property(style_box, "bg_color", Color("#262b34"), 0.5).set_delay(0.5)
 	
 	_on_source_selected(source_option_button.selected)
 	source_option_button.item_selected.connect(_on_source_selected)
@@ -24,35 +31,46 @@ func _ready() -> void:
 	_on_loading_screen_scene_selected(loading_screen_scene_option_button.selected)
 	loading_screen_scene_option_button.item_selected.connect(_on_loading_screen_scene_selected)
 	
-	change_scene_button.pressed.connect(_on_button_pressed)
+	reload_scene_button.pressed.connect(_on_reload_scene)
+	change_scene_button.pressed.connect(_on_change_scene)
 
 
-func _on_button_pressed() -> void:
+func _on_reload_scene() -> void:
+	get_node("/root/SceneManager").reload_current_scene({
+		message = "Scene reloaded!"
+	})
+
+
+func _on_change_scene() -> void:
 	var path := "res://addons/scene_manager/test/change_scene/other_scene.tscn"
 	
 	var properties := { message = message_line_edit.text }
 	
+	# It is used get_node because SceneManager is not autoload if plugin is
+	# disabled.
+	var scene_manager := get_node("/root/SceneManager")
+	
 	if source_option_button.selected == 1:
 		properties.message += " (PackedScene)"
-		get_node("/root/SceneManager").change_scene_to_packed(load(path), properties)
+		scene_manager.change_scene_to_packed(load(path), properties)
 		return
 	
 	if loading_screen_scene_option_button.selected == 1:
-		get_node("/root/SceneManager").set_loading_screen("res://addons/scene_manager/test/custom_loading_screen/loading_screen.tscn", LoadingScreen.Type.PERSIST)
+		scene_manager.set_loading_screen("res://addons/scene_manager/test/custom_loading_screen/loading_screen.tscn", LoadingScreen.Type.PERSIST)
 	else:
-		get_node("/root/SceneManager").reset_loading_screen()
+		scene_manager.reset_loading_screen()
 	
 	if loading_screen_append_resources_check_button.button_pressed:
 		properties["loading_dependency"] = [
-			get_node("/root/SceneManager").append_resource("res://addons/scene_manager/test/custom_loading_screen/loading_screen.gd"),
-			get_node("/root/SceneManager").append_resource("res://addons/scene_manager/test/change_scene/test_scene.tscn"),
+			scene_manager.append_resource("res://addons/scene_manager/test/custom_loading_screen/loading_screen.gd"),
+			scene_manager.append_resource("res://addons/scene_manager/test/change_scene/test_scene.tscn"),
 		]
 	
 	var loading_properties := {}
 	if (not loading_screen_message_line_edit.text.is_empty()):
 		loading_properties["message"] = loading_screen_message_line_edit.text
 	
-	get_node("/root/SceneManager").change_scene_to_file(path, properties, loading_screen_min_duration_slider.value, loading_properties)
+	scene_manager.change_scene_to_file(path, properties, loading_screen_min_duration_slider.value, loading_properties)
 
 
 func _on_source_selected(index: int) -> void:
