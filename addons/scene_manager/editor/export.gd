@@ -11,10 +11,8 @@ func _export_begin(features, is_debug, path, flags):
 func _export_file(path, type, features):
 	var result := regex.search(path)
 	if result:
-		push_warning("File removed: ", path, result.names)
+		print("SceneManager: File skipped: ", path, result.names)
 		skip()
-	else:
-		print(path)
 
 func _get_name() -> String:
 	return "SceneManager"
