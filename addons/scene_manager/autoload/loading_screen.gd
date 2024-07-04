@@ -10,10 +10,8 @@ class_name LoadingScreen extends Control
 ## 
 ## @tutorial(Wiki): https://github.com/m-canton/godot-scene-manager/wiki
 
-## Loading Screen setting name.
-const SETTING_NAME := "addons/scene_manager/loading_screen"
 ## Default Loading Screen scene path.
-const SETTING_DEFAULT_VALUE := "res://addons/scene_manager/autoload/loading_screen.tscn"
+const DEFAULT_PATH := "res://addons/scene_manager/autoload/loading_screen.tscn"
 
 enum Type {
 	DEFAULT,
