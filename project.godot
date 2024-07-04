@@ -13,7 +13,7 @@ config_version=5
 config/name="SceneManager"
 config/tags=PackedStringArray("plugin")
 run/main_scene="res://addons/scene_manager/test/change_scene/test_scene.tscn"
-config/features=PackedStringArray("4.2", "Mobile")
+config/features=PackedStringArray("4.1", "Mobile")
 boot_splash/fullsize=false
 config/icon="res://icon.webp"
 

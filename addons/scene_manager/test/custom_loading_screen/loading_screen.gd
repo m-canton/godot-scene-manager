@@ -11,5 +11,5 @@ func _ready() -> void:
 func _get_tween_duration() -> float:
 	return 0.0 # no tween
 
-func _get_range_object() -> Node:
+func _get_range_object() -> Object:
 	return $PanelContainer/ProgressBar
