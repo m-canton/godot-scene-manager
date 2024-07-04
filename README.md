@@ -1,6 +1,6 @@
 # godot-scene-manager
 
-Scene Manager Plugin for Godot 4.2+.
+Scene Manager Plugin for Godot 4.1+.
 
 ## Features
 
