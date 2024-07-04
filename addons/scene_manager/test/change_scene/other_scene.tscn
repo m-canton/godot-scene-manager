@@ -36,7 +36,7 @@ offset_right = 95.0
 offset_bottom = 27.0
 grow_horizontal = 2
 grow_vertical = 2
-text = "First Scene"
+text = "Previous Scene"
 
 [node name="Label" type="Label" parent="."]
 layout_mode = 1

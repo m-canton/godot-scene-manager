@@ -61,7 +61,7 @@ func _on_change_scene() -> void:
 		scene_manager.reset_loading_screen()
 	
 	if loading_screen_append_resources_check_button.button_pressed:
-		properties["loading_dependency"] = [
+		properties["loaded_resources"] = [
 			scene_manager.append_resource("res://addons/scene_manager/test/custom_loading_screen/loading_screen.gd"),
 			scene_manager.append_resource("res://addons/scene_manager/test/change_scene/test_scene.tscn"),
 		]
