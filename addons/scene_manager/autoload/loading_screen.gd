@@ -23,6 +23,8 @@ enum Type {
 
 ## Property used to store the tween which does smooth progress change.
 var _range_tween: Tween
+## Indicates if range_object object has [code]value[/code] property.
+var _range_object_exists_value := true
 
 #region Overrideable methods
 ## An object with a [code]value[/code] property to update with float values
@@ -43,23 +45,24 @@ func handle_load_error() -> void:
 	push_error("Scene load error. Override LoadingScreenBase.handle_load_error to show error on your custom screen.")
 #endregion
 
-## Percent must be a value between 0.0 and 100.0. Ensure your custom range
+## Percent must be a value between 0.0 and 100.0. Ensure your custom range_object
 ## node has a [code]value[/code] property with float values between 0 and 100.
 func set_progress(percent: float) -> void:
-	var range := _get_range_object()
-	if not range:
+	var range_object := _get_range_object()
+	if not range_object:
 		return
 	
 	var tween_duration := _get_tween_duration()
 	
-	if "value" in range:
+	if "value" in range_object:
 		if tween_duration > 0.0:
 			if _range_tween and _range_tween.is_running():
 				_range_tween.kill()
 			
 			_range_tween = self.create_tween()
-			_range_tween.tween_property(range, "value", percent, tween_duration)
+			_range_tween.tween_property(range_object, "value", percent, tween_duration)
 		else:
-			range.value = percent
-	else:
-		push_warning("'value' property doesn't exist in %s." % range.to_string())
+			range_object.value = percent
+	elif _range_object_exists_value:
+		_range_object_exists_value = false
+		push_warning("'value' property doesn't exist in %s." % range_object.to_string())
