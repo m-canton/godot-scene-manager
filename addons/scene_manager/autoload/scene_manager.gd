@@ -255,7 +255,6 @@ func reset_loading_screen() -> void:
 ## [code]min_duration > 0.0[/code].[br]
 ## [b]Note:[/b] It just can parse values within arrays and dictionaries. Does
 ## not parse the object properties.
-## @experimental
 func append_resource(dependency_path: String, type_hint: String = "") -> SceneManagerResourceRef:
 	for ref in _loading_dependencies:
 		if ref.path == dependency_path:
@@ -286,7 +285,6 @@ func _load_next_resource() -> Error:
 
 ## Replaces all the [SceneManagerResourceRef]s by their values.[br]
 ## [b]Note:[/b] [param properties] must be [Array] or [Dictionary].
-## @experimental
 func _parse_properties(properties) -> void:
 	if properties in _valid_properties:
 		return # Avoid cyclic reference
@@ -353,4 +351,31 @@ func _on_load_error() -> void:
 	_reset_loading_properties(LoadingProperties.ALL)
 	if _loading_screen:
 		_loading_screen.handle_load_error()
+#endregion
+
+
+#region Modals
+var _open_modals: Array = []
+var _loaded_modals: Array[PackedScene] = []
+
+## [WIP] Open modal from path.
+## @experimental
+func open_modal(_path: String, _properties := {}, min_duration := 0, _loading_properties := {}) -> void:
+	pass
+
+## [WIP] Open modal from packed.
+## @experimental
+func open_modal_from_packed(_packed_scene: PackedScene, _properties := {}) -> void:
+	pass
+
+## Close modals. You can set modal amount to close. If amount is negative, it closes all the modals.
+## @experimental
+func close_modal(amount := 1) -> void:
+	var s := _open_modals.size()
+	
+	amount = s if amount < 0 else min(amount, s)
+	
+	for i in range(amount):
+		var node: Node = _open_modals.pop_back()
+		node.queue_free()
 #endregion
