@@ -15,7 +15,7 @@ extends Node
 #region Virtual Methods
 func _ready() -> void:
 	set_process(false)
-	set_loading_screen(LoadingScreen.DEFAULT_PATH, LoadingScreen.Type.DEFAULT)
+	set_loading_screen(ProjectSettings.get_setting(LoadingScreen.SETTING_NAME_DEFAULT_PATH, LoadingScreen.DEFAULT_PATH), LoadingScreen.Type.DEFAULT)
 	
 	get_tree().root.child_entered_tree.connect(_on_child_entered_tree)
 	get_tree().root.child_exiting_tree.connect(_on_child_existing_tree)
