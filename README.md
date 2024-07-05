@@ -21,8 +21,8 @@ SceneManager.change_scene_to_file("my_scene.tscn", {
 
 ## Install
 
-You can download this plugin from Godot Asset Library. Here you can find the last changes. You can use it, adding `scene_manager` folder in your project addons folder and enabling this plugin. `test` folder contains examples, you can remove it.
+You can download this plugin from Godot Asset Library. Here you can find the last changes. Download and set `addons/scene_manager` folder in your project and enable the plugin in Project Settings. `test` folder contains examples, you can remove it.
 
 ## Uninstall
 
-This plugin only has the plugin folder and "addons/scene_manager/loading_screen" project setting. You can delete both things.
+Disable the plugin and remove `scene_manage` from addons folder.
