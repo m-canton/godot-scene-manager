@@ -4,7 +4,7 @@ class_name SceneManagerResourceRef extends RefCounted
 ## 
 ## Class used by [SceneManager] to load resources and use them as properties.
 ## 
-## @tutorial(Wiki): https://github.com/m-canton/godot-scene-manager/wiki
+## @tutorial(Appending Resources): https://github.com/m-canton/godot-scene-manager/wiki/Background-Loading#appending-resources
 
 var path := "" ## Resource path.
 var type_hint := "" ## Resource type hint. See [method ResourceLoader.load]

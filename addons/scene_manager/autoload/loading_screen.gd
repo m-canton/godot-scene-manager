@@ -8,7 +8,7 @@ class_name LoadingScreen extends Control
 ## You can override [method _get_range_object], [method _get_tween_duration] and
 ## [method handle_load_error] to customize.
 ## 
-## @tutorial(Wiki): https://github.com/m-canton/godot-scene-manager/wiki
+## @tutorial(Loading Screens): https://github.com/m-canton/godot-scene-manager/wiki/Background-Loading#loading-screens
 
 ## Default Loading Screen scene path.
 const DEFAULT_PATH := "res://addons/scene_manager/autoload/loading_screen.tscn"
