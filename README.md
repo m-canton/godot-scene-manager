@@ -25,4 +25,4 @@ You can download this plugin from Godot Asset Library. Here you can find the las
 
 ## Uninstall
 
-This plugin only has the plugin folder and "addons/scene_manager/loading_screen" project setting. You can delete both things.
+This plugin only has the plugin folder. You can delete both things.
