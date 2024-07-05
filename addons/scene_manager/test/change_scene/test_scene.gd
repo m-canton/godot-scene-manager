@@ -36,7 +36,6 @@ func _ready() -> void:
 
 
 func _on_reload_scene() -> void:
-	print(ProjectSettings.get_setting("addons/scene_manager/loading_screen/path"))
 	get_node("/root/SceneManager").reload_current_scene({
 		message = "Scene reloaded!"
 	})
