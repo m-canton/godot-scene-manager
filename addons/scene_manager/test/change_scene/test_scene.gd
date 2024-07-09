@@ -56,7 +56,7 @@ func _on_change_scene() -> void:
 		return
 	
 	if loading_screen_scene_option_button.selected == 1:
-		scene_manager.set_loading_screen("res://addons/scene_manager/test/custom_loading_screen/loading_screen.tscn", LoadingScreen.Type.PERSIST)
+		scene_manager.set_loading_screen("res://addons/scene_manager/test/custom_loading_screen/loading_screen.tscn")
 	else:
 		scene_manager.reset_loading_screen()
 	

@@ -11,6 +11,15 @@ func _enter_tree() -> void:
 	add_export_plugin(_export_plugin)
 	
 	#region ProjectSettings
+	if not ProjectSettings.has_setting(LoadingScreen.SETTING_NAME_PRINT_LOADING_TIMES):
+		ProjectSettings.set_setting(LoadingScreen.SETTING_NAME_PRINT_LOADING_TIMES, false)
+	ProjectSettings.set_initial_value(LoadingScreen.SETTING_NAME_PRINT_LOADING_TIMES, false)
+	ProjectSettings.set_as_basic(LoadingScreen.SETTING_NAME_PRINT_LOADING_TIMES, true)
+	ProjectSettings.add_property_info({
+		"name": LoadingScreen.SETTING_NAME_PRINT_LOADING_TIMES,
+		"type": TYPE_BOOL,
+	})
+	
 	if not ProjectSettings.has_setting(LoadingScreen.SETTING_NAME_DEFAULT_PATH):
 		ProjectSettings.set_setting(LoadingScreen.SETTING_NAME_DEFAULT_PATH, LoadingScreen.DEFAULT_PATH)
 	ProjectSettings.set_initial_value(LoadingScreen.SETTING_NAME_DEFAULT_PATH, LoadingScreen.DEFAULT_PATH)

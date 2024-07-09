@@ -8,18 +8,28 @@
 
 config_version=5
 
+[addons]
+
+scene_manager/loading_screen/print_loading_times=true
+
 [application]
 
 config/name="SceneManager"
-config/tags=PackedStringArray("plugin")
+config/tags=PackedStringArray("gui", "plugin", "unfinished")
 run/main_scene="res://addons/scene_manager/test/change_scene/test_scene.tscn"
-config/features=PackedStringArray("4.2", "Mobile")
+config/features=PackedStringArray("4.1", "Mobile")
+run/low_processor_mode=true
 boot_splash/fullsize=false
 config/icon="res://icon.webp"
 
 [autoload]
 
 SceneManager="*res://addons/scene_manager/autoload/scene_manager.gd"
+
+[display]
+
+window/stretch/aspect="expand"
+window/stretch/scale.mobile=3.0
 
 [editor_plugins]
 
@@ -28,3 +38,4 @@ enabled=PackedStringArray("res://addons/scene_manager/plugin.cfg")
 [rendering]
 
 renderer/rendering_method="mobile"
+textures/vram_compression/import_etc2_astc=true

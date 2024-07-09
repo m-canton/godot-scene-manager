@@ -6,8 +6,8 @@ extends Node
 ## created.[br]
 ## This autload uses [LoadingScreen] for background loading. You can
 ## extend this class to make a custom loading screen.[br]
-## [b]Note:[/b] Using [LoadingScreen] for other purposes may break the
-## loading functionality.
+## [b]Note:[/b] Using [LoadingScreen] for other purposes can produce undesirable
+## results.
 ## 
 ## @tutorial(Wiki): https://github.com/m-canton/godot-scene-manager/wiki
 
@@ -16,6 +16,7 @@ extends Node
 func _ready() -> void:
 	set_process(false)
 	set_loading_screen(ProjectSettings.get_setting(LoadingScreen.SETTING_NAME_DEFAULT_PATH, LoadingScreen.DEFAULT_PATH), LoadingScreen.Type.DEFAULT)
+	print_loading_times = ProjectSettings.get_setting(LoadingScreen.SETTING_NAME_PRINT_LOADING_TIMES, false)
 	
 	get_tree().root.child_entered_tree.connect(_on_child_entered_tree)
 	get_tree().root.child_exiting_tree.connect(_on_child_existing_tree)
@@ -27,27 +28,32 @@ func _process(delta: float) -> void:
 			_loading_screen_min_duration -= delta
 			if _loading_screen_min_duration <= 0.0:
 				_min_duration_completed = true
-				if _dependencies_are_loaded:
+				if _resources_are_loaded:
 					_on_scene_loaded()
 		
-		if not _dependencies_are_loaded:
+		if not _resources_are_loaded:
 			var progress := []
-			var status := ResourceLoader.load_threaded_get_status(_current_dependency.path, progress)
+			var status := ResourceLoader.load_threaded_get_status(_current_resource.path, progress)
 			if status == ResourceLoader.THREAD_LOAD_IN_PROGRESS:
 				if _loading_screen_min_duration > 0.0:
 					_loading_screen_set_progress(progress[0])
 			elif status == ResourceLoader.THREAD_LOAD_LOADED:
-				_loading_screen_set_progress(100.0 * float(_current_dependency_index + 1) / float(_loading_dependencies.size()))
-				_current_dependency.value = ResourceLoader.load_threaded_get(_current_dependency.path)
-				_current_dependency.loaded = true
+				if print_loading_times:
+					var loading_time := Time.get_ticks_msec() - _resource_loading_time
+					_cumulative_resource_loading_time += loading_time
+					print("Resource Loaded: ", _current_resource.path, " (%d ms)" % [loading_time])
 				
-				if _load_next_resource() == OK and _dependencies_are_loaded:
+				_loading_screen_set_progress(100.0 * float(_current_resource_index + 1) / float(_loading_resources.size()))
+				_current_resource.value = ResourceLoader.load_threaded_get(_current_resource.path)
+				_current_resource.loaded = true
+				
+				if _load_next_resource() == OK and _resources_are_loaded:
 					_on_scene_loaded()
 			elif status == ResourceLoader.THREAD_LOAD_FAILED:
-				push_error("Load failed: " + _current_dependency.path)
+				push_error("Load failed: " + _current_resource.path)
 				_on_load_error()
 			elif status == ResourceLoader.THREAD_LOAD_INVALID_RESOURCE:
-				push_error("Invalid resource: " +  _current_dependency.path)
+				push_error("Invalid resource: " +  _current_resource.path)
 				_on_load_error()
 #endregion
 
@@ -63,19 +69,19 @@ enum LoadingProperties {
 
 ## Next scene properties to set when the scene is .
 var _loading_scene_properties := {}
-## Loading dependencies queue.
-var _loading_dependencies: Array[SceneManagerResourceRef] = []
-var _current_dependency: SceneManagerResourceRef
-var _current_dependency_index := -1:
+## Loading resources queue.
+var _loading_resources: Array[SceneManagerResourceRef] = []
+var _current_resource: SceneManagerResourceRef
+var _current_resource_index := -1:
 	set(value):
-		if _current_dependency_index != value:
-			_current_dependency_index = value
-			if _current_dependency_index >= 0 and _current_dependency_index < _loading_dependencies.size():
-				_current_dependency = _loading_dependencies[_current_dependency_index]
+		if _current_resource_index != value:
+			_current_resource_index = value
+			if _current_resource_index >= 0 and _current_resource_index < _loading_resources.size():
+				_current_resource = _loading_resources[_current_resource_index]
 			else:
-				_current_dependency = null
+				_current_resource = null
 
-## Resets all the properties in SceneManager.
+## Resets all the properties in [SceneManager].
 func clear_options() -> void:
 	_reset_loading_properties()
 
@@ -102,8 +108,8 @@ func change_scene_to_file(path: String, properties := {}, min_duration := 0.0, l
 		_loading_screen_properties = loading_properties
 		return _load_scene(path, min_duration)
 	
-	_current_dependency = SceneManagerResourceRef.new()
-	_current_dependency.path = path
+	_current_resource = SceneManagerResourceRef.new()
+	_current_resource.path = path
 	
 	var error := tree.change_scene_to_file(path)
 	if error:
@@ -122,9 +128,9 @@ func change_scene_to_packed(packed_scene: PackedScene, properties := {}) -> Erro
 		return FAILED
 	
 	_loading_scene_properties = properties
-	_current_dependency = SceneManagerResourceRef.new()
-	_current_dependency.path = packed_scene.resource_path
-	_current_dependency.value = packed_scene
+	_current_resource = SceneManagerResourceRef.new()
+	_current_resource.path = packed_scene.resource_path
+	_current_resource.value = packed_scene
 	
 	var error := get_tree().change_scene_to_packed(packed_scene)
 	if error:
@@ -140,8 +146,8 @@ func reload_current_scene(properties := {}) -> Error:
 		return FAILED
 	
 	var tree := get_tree()
-	_current_dependency = SceneManagerResourceRef.new()
-	_current_dependency.path = tree.current_scene.scene_file_path
+	_current_resource = SceneManagerResourceRef.new()
+	_current_resource.path = tree.current_scene.scene_file_path
 	_loading_scene_properties = properties
 	var error := tree.reload_current_scene()
 	if error:
@@ -160,12 +166,12 @@ func _reset_loading_properties(what := LoadingProperties.ALL) -> void:
 		_loading_screen = null
 		_loading_screen_min_duration = 0.0
 		_min_duration_completed = true
-		_dependencies_are_loaded = true
+		_resources_are_loaded = true
 		_valid_properties = []
 	
 	if what == LoadingProperties.ALL || what == LoadingProperties.AFTER:
-		_loading_dependencies = []
-		_current_dependency_index = -1
+		_loading_resources = []
+		_current_resource_index = -1
 		_loading_scene_properties = {}
 
 ## Updates properties when next scene is entered to the tree. Also adds
@@ -176,7 +182,7 @@ func _on_child_entered_tree(node: Node) -> void:
 		_loading_screen = node
 		properties = _loading_screen_properties
 		_reset_loading_properties(LoadingProperties.LOADING_SCREEN_AFTER)
-	elif _current_dependency is SceneManagerResourceRef and node.scene_file_path == _current_dependency.path:
+	elif _current_resource is SceneManagerResourceRef and node.scene_file_path == _current_resource.path:
 		properties = _loading_scene_properties
 		_reset_loading_properties(LoadingProperties.AFTER)
 	else:
@@ -196,6 +202,15 @@ func _on_child_existing_tree(node: Node) -> void:
 
 
 #region Loading Screen
+## Print resource loading times on output.[br]
+## [b]Note:[/b] Only used with background loading.
+var print_loading_times := false
+## Loading time in millseconds of the current resource.[br]
+## [b]Note:[/b] Only used with background loading.
+var _resource_loading_time := 0
+## Cumulative resource loading time in milliseconds.[br]
+## [b]Note:[/b] Only used with background loading.
+var _cumulative_resource_loading_time := 0
 ## Indicates whether a scene is currently being loaded.[br]
 ## Only used with background loading.
 var _loading := false
@@ -207,7 +222,7 @@ var _loading_screen_properties := {}
 var _loading_screen_min_duration := 0.0
 ## Ensures that a minimum duration has passed before completing the loading
 ## process.[br]
-## Only used with background loading.
+## [b]Note:[/b] Only used with background loading.
 var _min_duration_completed := true
 ## Current loading screen instance.
 var _loading_screen: LoadingScreen
@@ -218,11 +233,11 @@ var _packed_loading_screen: PackedScene
 ## Indicates if current loading screen is persist.
 var _loading_screen_persistent := true
 ## Property sets with parsed [SceneManagerResourceRef] values.[br]
-## Only used with background loading.
+## [b]Note:[/b] Only used with background loading.
 var _valid_properties := []
-## Indicates all the dependencies are loaded.
-## See [member _loading_dependencies].
-var _dependencies_are_loaded := true
+## Indicates all the resources are loaded.
+## See [member _loading_resources].
+var _resources_are_loaded := true
 
 ## Sets current loading screen. See [method set_loading_screen_from_packed].
 func set_loading_screen(path: String, type := LoadingScreen.Type.ONE_SHOT) -> void:
@@ -248,39 +263,59 @@ func reset_loading_screen() -> void:
 	_packed_loading_screen = _default_packed_loading_screen
 	_loading_screen_persistent = false
 
-## Appends a loading dependency and returns a [SceneManagerResourceRef]. Use
-## this in your properties to pass to next scene. Loading dependencies are
+## Appends a loading resource and returns a [SceneManagerResourceRef]. Use
+## this in your properties to pass to next scene. Loading resources are
 ## loaded on background and parses properties.[br]
 ## [b]Note:[/b] This just works using [method change_scene_to_file] with
 ## [code]min_duration > 0.0[/code].[br]
 ## [b]Note:[/b] It just can parse values within arrays and dictionaries. Does
 ## not parse the object properties.
-func append_resource(dependency_path: String, type_hint: String = "") -> SceneManagerResourceRef:
-	for ref in _loading_dependencies:
-		if ref.path == dependency_path:
+func append_resource(resource_path: String, type_hint: String = "") -> SceneManagerResourceRef:
+	for ref in _loading_resources:
+		if ref.path == resource_path:
 			push_warning("Resource is already added to load.")
 			return ref
 	
-	if not ResourceLoader.exists(dependency_path, type_hint):
-		push_error("Resource does not exist: ", dependency_path)
+	if not ResourceLoader.exists(resource_path, type_hint):
+		push_error("Resource does not exist: ", resource_path)
 		return null
 	
-	var dependency_ref := SceneManagerResourceRef.new()
-	dependency_ref.path = dependency_path
-	dependency_ref.type_hint = type_hint
-	_loading_dependencies.append(dependency_ref)
+	var resource_ref := SceneManagerResourceRef.new()
+	resource_ref.path = resource_path
+	resource_ref.type_hint = type_hint
+	_loading_resources.append(resource_ref)
 	
-	return dependency_ref
+	if ResourceLoader.has_cached(resource_path):
+		resource_ref.loaded = true
+		resource_ref.value = ResourceLoader.load(resource_path)
+	
+	return resource_ref
 
 ## Loads the next resource.
 func _load_next_resource() -> Error:
-	if _current_dependency_index + 1 < _loading_dependencies.size():
-		_current_dependency_index += 1
-		var error := ResourceLoader.load_threaded_request(_current_dependency.path, _current_dependency.type_hint)
+	if _current_resource_index + 1 < _loading_resources.size():
+		_current_resource_index += 1
+		
+		if _current_resource.loaded:
+			if print_loading_times:
+				print("Resource loaded: ", _current_resource.path, " (cache)")
+			return _load_next_resource()
+		elif ResourceLoader.has_cached(_current_resource.path):
+			_current_resource.value = ResourceLoader.load(_current_resource.path)
+			if print_loading_times:
+				print("Resource loaded: ", _current_resource.path, " (cache)")
+			return _load_next_resource()
+		
+		if print_loading_times:
+			_resource_loading_time = Time.get_ticks_msec()
+		
+		var error := ResourceLoader.load_threaded_request(_current_resource.path, _current_resource.type_hint)
 		if error:
 			push_error(error_string(error))
+			_on_load_error()
+		
 		return error
-	_dependencies_are_loaded = true
+	_resources_are_loaded = true
 	return OK
 
 ## Replaces all the [SceneManagerResourceRef]s by their values.[br]
@@ -319,7 +354,9 @@ func _load_scene(path: String, min_duration: float) -> Error:
 	
 	_loading = true
 	_min_duration_completed = false
-	_dependencies_are_loaded = false
+	_resources_are_loaded = false
+	if print_loading_times:
+		_cumulative_resource_loading_time = 0
 	set_process(true)
 	
 	get_tree().change_scene_to_packed(_packed_loading_screen)
@@ -333,10 +370,13 @@ func _loading_screen_set_progress(percent: float) -> void:
 
 ## Hides loading screen.
 func _on_scene_loaded() -> Error:
-	if _dependencies_are_loaded and not _min_duration_completed:
+	if _resources_are_loaded and not _min_duration_completed:
 		return OK
 	
-	if not _current_dependency is SceneManagerResourceRef or not _current_dependency.value is PackedScene:
+	if print_loading_times:
+		print("Resources loaded %d in milliseconds" % [_cumulative_resource_loading_time])
+	
+	if not _current_resource is SceneManagerResourceRef or not _current_resource.value is PackedScene:
 		_on_load_error()
 		return FAILED
 	
@@ -344,7 +384,7 @@ func _on_scene_loaded() -> Error:
 	_parse_properties(_loading_scene_properties)
 	_reset_loading_properties(LoadingProperties.BEFORE)
 	
-	return get_tree().change_scene_to_packed(_current_dependency.value)
+	return get_tree().change_scene_to_packed(_current_resource.value)
 
 
 func _on_load_error() -> void:
@@ -355,27 +395,26 @@ func _on_load_error() -> void:
 
 
 #region Modals
-var _open_modals: Array = []
-var _loaded_modals: Array[PackedScene] = []
+var _modals: Array[Control] = []
+var _loaded_modals: Array[Dictionary] = []
 
-## [WIP] Open modal from path.
-## @experimental
-func open_modal(_path: String, _properties := {}, min_duration := 0, _loading_properties := {}) -> void:
-	pass
+## Loads a scene to use as modal.
+func load_modal(path: String, callback: Callable) -> int:
+	push_warning("Not implemented.")
+	return 0
 
-## [WIP] Open modal from packed.
-## @experimental
-func open_modal_from_packed(_packed_scene: PackedScene, _properties := {}) -> void:
-	pass
+func add_modal(packed: PackedScene) -> int:
+	push_warning("Not implemented.")
+	return 0
 
-## Close modals. You can set modal amount to close. If amount is negative, it closes all the modals.
-## @experimental
-func close_modal(amount := 1) -> void:
-	var s := _open_modals.size()
-	
-	amount = s if amount < 0 else min(amount, s)
-	
-	for i in range(amount):
-		var node: Node = _open_modals.pop_back()
-		node.queue_free()
+func open_modal(index: int) -> Error:
+	push_warning("Not implemented.")
+	return FAILED
+
+func close_modal(index: int) -> Error:
+	push_warning("Not implemented.")
+	return FAILED
+
+func rollback() -> void:
+	push_warning("Not implemented.")
 #endregion
