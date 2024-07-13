@@ -188,7 +188,7 @@ func _on_child_entered_tree(node: Node) -> void:
 	else:
 		return
 	
-	transition_reset()
+	transition_clear()
 	
 	for property in properties:
 		if property in node:
@@ -400,19 +400,26 @@ func _on_load_error() -> void:
 #region Transition
 ## Current transition tween. [SceneManager.transition_start] returns this.
 var _transition_tween: Tween
+var _transition_duration := 0.0
 
 ## Node to show the transition.
 @onready var color_rect: ColorRect = $ColorRect
 
-func transition_reset() -> void:
+func transition_clear() -> void:
+	_transition_duration = 0.0
+	
 	var material: ShaderMaterial = color_rect.material
 	material.set_shader_parameter("completion", 0.0)
 	material.set_shader_parameter("use_gradient", false)
 	material.set_shader_parameter("use_color_texture", false)
 
-## Starts a transition. Returns a tween whose finished signal indicates the
+## Sets transition duration.
+func transition_set_duration(duration: float) -> void:
+	_transition_duration = duration
+
+##   Starts a transition. Returns a tween whose finished signal indicates the
 ## transition is finished.
-func transition_start(transition: SceneTransition, reverse := false, duration := 0.0) -> Tween:
+func transition_start(transition: SceneTransition, reverse := false) -> Tween:
 	if _transition_tween and _transition_tween.is_valid():
 		_transition_tween.kill()
 	_transition_tween = create_tween()
@@ -435,79 +442,11 @@ func transition_start(transition: SceneTransition, reverse := false, duration :=
 		material.set_shader_parameter("color_texture", transition.color_texture)
 	
 	var value := 1.0 if reverse else 0.0
-	_transition_tween.tween_method(_transition_set_shader_completion, value, 1.0 - value, transition.duration if duration == 0 else duration)
+	_transition_tween.tween_method(_transition_set_shader_completion, value, 1.0 - value, transition.duration if _transition_duration == 0 else _transition_duration)
 	
 	return _transition_tween
 
 ## Sets shader completion parameter.
 func _transition_set_shader_completion(value: float) -> void:
 	(color_rect.material as ShaderMaterial).set_shader_parameter("completion", value)
-#endregion
-
-
-#region Control
-## Current Scene Manager control. Current scene in the tree must have one
-## [SceneManagerControl].
-var _control: SceneManagerControl
-## Open modal sequence. [method rollback] closes modals in reverse.
-var _control_modals: Array[Control] = []
-var _control_loaded_modals: Array[Dictionary] = []
-
-## Sets the current SceneManagerControl. It is used to play transitions and
-## open modals.
-func set_control(control: SceneManagerControl) -> void:
-	_control = control
-
-## Checks if current Scene Manager control is valid. It must use
-## [SceneManager.set_control] in the method `Node._ready`.
-func _ensure_control() -> bool:
-	var value := is_instance_valid(_control)
-	if not value:
-		push_error("Current SceneManagerControl is not valid.")
-	return value
-
-## To test methods.
-## @experimental
-func test_control() -> void:
-	_ensure_control()
-
-## Loads a scene to use as modal.
-func load_modal(path: String, callback: Callable) -> int:
-	if not _ensure_control():
-		return 0
-	
-	push_warning("Not implemented.")
-	return 0
-
-func add_modal(packed: PackedScene) -> int:
-	if not _ensure_control():
-		return 0
-	
-	push_warning("Not implemented.")
-	return 0
-
-## Shows a modal and adds it to [member _control_modals].
-func open_modal(index: int) -> Error:
-	if not _ensure_control():
-		return FAILED
-	
-	push_warning("Not implemented.")
-	return FAILED
-
-func close_modal(index: int) -> Error:
-	if not _ensure_control():
-		return FAILED
-	
-	push_warning("Not implemented.")
-	return FAILED
-
-func rollback() -> void:
-	if not _ensure_control():
-		return
-	
-	push_warning("Not implemented.")
-
-## Sets a modal that is open when [member _control_modals] is empty.
-func set_rollback_modal() -> void:
-	pass
 #endregion

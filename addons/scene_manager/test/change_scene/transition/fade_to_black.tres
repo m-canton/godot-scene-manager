@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="SceneTransition" load_steps=2 format=3 uid="uid://daryqt1up0rff"]
 
-[ext_resource type="Script" path="res://addons/scene_manager/scene/transition.gd" id="1_o1kms"]
+[ext_resource type="Script" path="res://addons/scene_manager/autoload/transition.gd" id="1_o1kms"]
 
 [resource]
 script = ExtResource("1_o1kms")

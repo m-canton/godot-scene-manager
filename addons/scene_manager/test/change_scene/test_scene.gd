@@ -13,7 +13,7 @@ var message := ""
 @onready var loading_screen_message_line_edit: LineEdit = %LoadingScreenContainer/Controls/MessageControl/LineEdit
 @onready var loading_screen_append_resources_check_button: CheckButton = %LoadingScreenContainer/AppendResourcesControl/CheckButton
 
-@onready var control_button: Button = $ColorRect/VBoxContainer/MessageMarginContainer/VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer/ControlButton
+@onready var modals_button: Button = $ColorRect/VBoxContainer/MessageMarginContainer/VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer/ModalsButton
 @onready var reload_scene_button = $ColorRect/VBoxContainer/MessageMarginContainer/VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer/ReloadSceneButton
 @onready var change_scene_button: Button = $ColorRect/VBoxContainer/MessageMarginContainer/VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer/ChangeSceneButton
 
@@ -37,7 +37,7 @@ func _ready() -> void:
 	_on_loading_screen_scene_selected(loading_screen_scene_option_button.selected)
 	loading_screen_scene_option_button.item_selected.connect(_on_loading_screen_scene_selected)
 	
-	control_button.pressed.connect(_on_control_button_pressed)
+	modals_button.pressed.connect(_on_modals_button_pressed)
 	reload_scene_button.pressed.connect(_on_reload_scene)
 	change_scene_button.pressed.connect(_fade_to_change_scene)
 
@@ -93,5 +93,5 @@ func _on_loading_screen_scene_selected(index: int) -> void:
 	var message_control: Control = %LoadingScreenContainer/Controls/MessageControl
 	message_control.visible = index == 1
 
-func _on_control_button_pressed() -> void:
-	get_node("/root/SceneManager").change_scene_to_file("res://addons/scene_manager/test/control/control.tscn")
+func _on_modals_button_pressed() -> void:
+	get_node("/root/SceneManager").change_scene_to_file("res://addons/scene_manager/test/modals/modals.tscn")

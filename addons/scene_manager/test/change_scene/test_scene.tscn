@@ -31,11 +31,16 @@ corner_radius_bottom_left = 20
 content_margin_left = 10.0
 content_margin_right = 10.0
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_obii3"]
-bg_color = Color(0.14902, 0.168627, 0.203922, 1)
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_17cvy"]
+bg_color = Color(0.145098, 0.168627, 0.203922, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.211765, 0.239216, 0.290196, 1)
 
 [sub_resource type="Theme" id="Theme_25wr8"]
-PopupPanel/styles/panel = SubResource("StyleBoxFlat_obii3")
+PopupMenu/styles/panel = SubResource("StyleBoxFlat_17cvy")
 
 [sub_resource type="GDScript" id="GDScript_kihbh"]
 script/source = "extends VBoxContainer
@@ -162,6 +167,7 @@ text = "Source"
 layout_mode = 2
 theme = SubResource("Theme_25wr8")
 item_count = 2
+selected = 0
 popup/item_0/text = "Path"
 popup/item_0/id = 1
 popup/item_1/text = "Packed Scene"
@@ -207,6 +213,7 @@ text = "Scene"
 custom_minimum_size = Vector2(120, 0)
 layout_mode = 2
 item_count = 2
+selected = 0
 popup/item_0/text = "Default"
 popup/item_0/id = 0
 popup/item_1/text = "Custom"
@@ -258,11 +265,11 @@ button_pressed = true
 layout_mode = 2
 theme_override_constants/separation = 16
 
-[node name="ControlButton" type="Button" parent="ColorRect/VBoxContainer/MessageMarginContainer/VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer"]
+[node name="ModalsButton" type="Button" parent="ColorRect/VBoxContainer/MessageMarginContainer/VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer"]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 size_flags_horizontal = 3
-text = "Test Control"
+text = "Modals"
 
 [node name="ReloadSceneButton" type="Button" parent="ColorRect/VBoxContainer/MessageMarginContainer/VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer"]
 custom_minimum_size = Vector2(0, 40)
