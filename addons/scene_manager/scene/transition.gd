@@ -44,6 +44,6 @@ const DEFAULT_LAYER := 1
 
 func _validate_property(property: Dictionary) -> void:
 	if property.name == "color":
-		property.usage = PROPERTY_USAGE_EDITOR if color_type == ColorType.TEXTURE else PROPERTY_USAGE_NO_EDITOR
-	elif property.name == "color_texture":
 		property.usage = PROPERTY_USAGE_EDITOR if color_type == ColorType.SOLID else PROPERTY_USAGE_NO_EDITOR
+	elif property.name == "color_texture":
+		property.usage = PROPERTY_USAGE_EDITOR if color_type == ColorType.TEXTURE else PROPERTY_USAGE_NO_EDITOR
