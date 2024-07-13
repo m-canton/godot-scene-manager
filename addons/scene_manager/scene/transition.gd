@@ -8,12 +8,6 @@ class_name SceneTransition extends Resource
 ## 
 ## @tutorial(Transitions): https://github.com/m-canton/godot-scene-manager/wiki/Transitions
 
-enum Type {
-	NONE,
-	PRESET,
-	TEXTURE,
-}
-
 enum ColorType {
 	SOLID,
 	TEXTURE,
