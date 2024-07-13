@@ -5,6 +5,8 @@ class_name SceneTransition extends Resource
 ## 
 ## Base class for Scene Manager transitions. It is used to set transitions in a
 ## [SceneManagerControl].
+## 
+## @tutorial(Transitions): https://github.com/m-canton/godot-scene-manager/wiki/Transitions
 
 enum Type {
 	NONE,
@@ -15,15 +17,6 @@ enum Type {
 enum ColorType {
 	SOLID,
 	TEXTURE,
-}
-
-enum Preset {
-	FADE,
-	DISSOLVE,
-	#PIXELLATE,
-	#MOVE,
-	#MOVE_IN_RIGHT,
-	#MOVE_OUT_RIGHT,
 }
 
 const SETTING_NAME_LAYER := "addons/scene_manager/transition/layer"
