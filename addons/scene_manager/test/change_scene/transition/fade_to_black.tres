@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="SceneTransition" load_steps=2 format=3 uid="uid://daryqt1up0rff"]
+
+[ext_resource type="Script" path="res://addons/scene_manager/scene/transition.gd" id="1_o1kms"]
+
+[resource]
+script = ExtResource("1_o1kms")
+duration = 0.5
+color_type = 0
+color = Color(0, 0, 0, 1)
+gradient_smoothness = 0.1
+gradient_inverted = false
+gradient_flip_h = false
+gradient_flip_v = false

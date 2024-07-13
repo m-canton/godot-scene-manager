@@ -1,4 +1,4 @@
-class_name SceneManagerModalResource extends Resource
+class_name SceneManagerModal extends Resource
 
 
 ## SceneManager modal resource.

@@ -1,0 +1,14 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://byg1ok02sgkaf"]
+
+[ext_resource type="Shader" path="res://addons/scene_manager/autoload/material_shader.gdshader" id="1_hct5i"]
+
+[resource]
+shader = ExtResource("1_hct5i")
+shader_parameter/completion = 0.0
+shader_parameter/color = Vector4(0, 0, 0, 1)
+shader_parameter/use_color_texture = false
+shader_parameter/use_gradient = false
+shader_parameter/gradient_inverted = false
+shader_parameter/gradient_smoothness = 0.1
+shader_parameter/gradient_flip_h = false
+shader_parameter/gradient_flip_v = false

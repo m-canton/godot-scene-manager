@@ -1,4 +1,4 @@
-extends Node
+extends CanvasLayer
 
 ## SceneManager Autoload
 ## 
@@ -11,12 +11,12 @@ extends Node
 ## 
 ## @tutorial(Wiki): https://github.com/m-canton/godot-scene-manager/wiki
 
-
 #region Virtual Methods
 func _ready() -> void:
 	set_process(false)
 	set_loading_screen(ProjectSettings.get_setting(LoadingScreen.SETTING_NAME_DEFAULT_PATH, LoadingScreen.DEFAULT_PATH), LoadingScreen.Type.DEFAULT)
 	print_loading_times = ProjectSettings.get_setting(LoadingScreen.SETTING_NAME_PRINT_LOADING_TIMES, false)
+	layer = ProjectSettings.get_setting(SceneTransition.SETTING_NAME_LAYER, SceneTransition.DEFAULT_LAYER)
 	
 	get_tree().root.child_entered_tree.connect(_on_child_entered_tree)
 	get_tree().root.child_exiting_tree.connect(_on_child_existing_tree)
@@ -188,6 +188,8 @@ func _on_child_entered_tree(node: Node) -> void:
 	else:
 		return
 	
+	transition_reset()
+	
 	for property in properties:
 		if property in node:
 			node.set(property, properties[property])
@@ -270,7 +272,7 @@ func reset_loading_screen() -> void:
 ## [code]min_duration > 0.0[/code].[br]
 ## [b]Note:[/b] It just can parse values within arrays and dictionaries. Does
 ## not parse the object properties.
-func append_resource(resource_path: String, type_hint: String = "") -> SceneManagerResourceRef:
+func append_resource(resource_path: String, type_hint := "", cache_mode := ResourceLoader.CACHE_MODE_REUSE) -> SceneManagerResourceRef:
 	for ref in _loading_resources:
 		if ref.path == resource_path:
 			push_warning("Resource is already added to load.")
@@ -283,9 +285,10 @@ func append_resource(resource_path: String, type_hint: String = "") -> SceneMana
 	var resource_ref := SceneManagerResourceRef.new()
 	resource_ref.path = resource_path
 	resource_ref.type_hint = type_hint
+	resource_ref.cache_mode = cache_mode
 	_loading_resources.append(resource_ref)
 	
-	if ResourceLoader.has_cached(resource_path):
+	if cache_mode == ResourceLoader.CACHE_MODE_REUSE and ResourceLoader.has_cached(resource_path):
 		resource_ref.loaded = true
 		resource_ref.value = ResourceLoader.load(resource_path)
 	
@@ -301,7 +304,7 @@ func _load_next_resource() -> Error:
 				print("Resource loaded: ", _current_resource.path, " (cache)")
 			return _load_next_resource()
 		elif ResourceLoader.has_cached(_current_resource.path):
-			_current_resource.value = ResourceLoader.load(_current_resource.path)
+			_current_resource.value = ResourceLoader.load(_current_resource.path, _current_resource.type_hint, _current_resource.cache_mode)
 			if print_loading_times:
 				print("Resource loaded: ", _current_resource.path, " (cache)")
 			return _load_next_resource()
@@ -394,27 +397,117 @@ func _on_load_error() -> void:
 #endregion
 
 
-#region Modals
-var _modals: Array[Control] = []
-var _loaded_modals: Array[Dictionary] = []
+#region Transition
+## Current transition tween. [SceneManager.transition_start] returns this.
+var _transition_tween: Tween
+
+## Node to show the transition.
+@onready var color_rect: ColorRect = $ColorRect
+
+func transition_reset() -> void:
+	var material: ShaderMaterial = color_rect.material
+	material.set_shader_parameter("completion", 0.0)
+	material.set_shader_parameter("use_gradient", false)
+	material.set_shader_parameter("use_color_texture", false)
+
+## Starts a transition. Returns a tween whose finished signal indicates the
+## transition is finished.
+func transition_start(transition: SceneTransition, reverse := false, duration := 0.0) -> Tween:
+	if _transition_tween and _transition_tween.is_valid():
+		_transition_tween.kill()
+	_transition_tween = create_tween()
+	
+	var material: ShaderMaterial = color_rect.material
+	if transition.gradient_texture:
+		material.set_shader_parameter("use_gradient", true)
+		material.set_shader_parameter("gradient_texture", transition.gradient_texture)
+		material.set_shader_parameter("gradient_inverted", transition.gradient_inverted)
+		material.set_shader_parameter("gradient_flip_h", transition.gradient_flip_h)
+		material.set_shader_parameter("gradient_flip_v", transition.gradient_flip_v)
+	else:
+		material.set_shader_parameter("use_gradient", false)
+	
+	if transition.color_type == SceneTransition.ColorType.SOLID:
+		material.set_shader_parameter("use_color_texture", false)
+		material.set_shader_parameter("color", transition.color)
+	else:
+		material.set_shader_parameter("use_color_texture", true)
+		material.set_shader_parameter("color_texture", transition.color_texture)
+	
+	var value := 1.0 if reverse else 0.0
+	_transition_tween.tween_method(_transition_set_shader_completion, value, 1.0 - value, transition.duration if duration == 0 else duration)
+	
+	return _transition_tween
+
+## Sets shader completion parameter.
+func _transition_set_shader_completion(value: float) -> void:
+	(color_rect.material as ShaderMaterial).set_shader_parameter("completion", value)
+#endregion
+
+
+#region Control
+## Current Scene Manager control. Current scene in the tree must have one
+## [SceneManagerControl].
+var _control: SceneManagerControl
+## Open modal sequence. [method rollback] closes modals in reverse.
+var _control_modals: Array[Control] = []
+var _control_loaded_modals: Array[Dictionary] = []
+
+## Sets the current SceneManagerControl. It is used to play transitions and
+## open modals.
+func set_control(control: SceneManagerControl) -> void:
+	_control = control
+
+## Checks if current Scene Manager control is valid. It must use
+## [SceneManager.set_control] in the method `Node._ready`.
+func _ensure_control() -> bool:
+	var value := is_instance_valid(_control)
+	if not value:
+		push_error("Current SceneManagerControl is not valid.")
+	return value
+
+## To test methods.
+## @experimental
+func test_control() -> void:
+	_ensure_control()
 
 ## Loads a scene to use as modal.
 func load_modal(path: String, callback: Callable) -> int:
+	if not _ensure_control():
+		return 0
+	
 	push_warning("Not implemented.")
 	return 0
 
 func add_modal(packed: PackedScene) -> int:
+	if not _ensure_control():
+		return 0
+	
 	push_warning("Not implemented.")
 	return 0
 
+## Shows a modal and adds it to [member _control_modals].
 func open_modal(index: int) -> Error:
+	if not _ensure_control():
+		return FAILED
+	
 	push_warning("Not implemented.")
 	return FAILED
 
 func close_modal(index: int) -> Error:
+	if not _ensure_control():
+		return FAILED
+	
 	push_warning("Not implemented.")
 	return FAILED
 
 func rollback() -> void:
+	if not _ensure_control():
+		return
+	
 	push_warning("Not implemented.")
+
+## Sets a modal that is open when [member _control_modals] is empty.
+func set_rollback_modal() -> void:
+	pass
 #endregion

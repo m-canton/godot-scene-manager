@@ -1,5 +1,4 @@
-@tool
-class_name SceneManagerModalContainer extends Container
+class_name SceneManagerControl extends Control
 
 ## ModalContainer from Scene Manager plugin.
 ##
@@ -7,7 +6,7 @@ class_name SceneManagerModalContainer extends Container
 ## @experimental
 
 
-@export var modal_resources: Array[SceneManagerModalResource] = []:
+@export var modal_resources: Array[SceneManagerModal] = []:
 	set(value):
 		if modal_resources != value:
 			modal_resources = value
@@ -15,12 +14,8 @@ class_name SceneManagerModalContainer extends Container
 var _modals: Array[Control] = []
 
 
-func _notification(what: int) -> void:
-	if what == NOTIFICATION_PRE_SORT_CHILDREN:
-		for c in get_children():
-			if c is Control:
-				fit_child_in_rect(c, Rect2(Vector2.ZERO, size))
-
+func _draw() -> void:
+	draw_rect(Rect2(Vector2.ZERO, size), Color.BLACK)
 
 ## Modal scene must have a Control root.
 func open_modal(node: Node, properties := {}) -> void:
@@ -32,6 +27,14 @@ func close_modal(node: Node) -> void:
 
 
 func register_modal(path: String) -> void:
+	pass
+
+
+func dissolve_to_color() -> void:
+	pass
+
+
+func dissolve_from_color() -> void:
 	pass
 
 

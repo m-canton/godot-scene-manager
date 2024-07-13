@@ -1,5 +1,7 @@
 extends Control
 
+const FADE_TO_BLACK = preload("res://addons/scene_manager/test/change_scene/transition/fade_to_black.tres")
+const RADIAL_TO_BLACK = preload("res://addons/scene_manager/test/change_scene/transition/radial_to_black.tres")
 
 var message := ""
 
@@ -11,12 +13,16 @@ var message := ""
 @onready var loading_screen_message_line_edit: LineEdit = %LoadingScreenContainer/Controls/MessageControl/LineEdit
 @onready var loading_screen_append_resources_check_button: CheckButton = %LoadingScreenContainer/AppendResourcesControl/CheckButton
 
+@onready var control_button: Button = $ColorRect/VBoxContainer/MessageMarginContainer/VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer/ControlButton
 @onready var reload_scene_button = $ColorRect/VBoxContainer/MessageMarginContainer/VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer/ReloadSceneButton
 @onready var change_scene_button: Button = $ColorRect/VBoxContainer/MessageMarginContainer/VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer/ChangeSceneButton
 
 @onready var message_label: Label = $ColorRect/VBoxContainer/MessageMarginContainer/VBoxContainer/MessageLabel
 
 func _ready() -> void:
+	process_mode = PROCESS_MODE_DISABLED
+	get_node("/root/SceneManager").transition_start(FADE_TO_BLACK, true).finished.connect(func(): process_mode = PROCESS_MODE_INHERIT)
+	
 	var style_box: StyleBoxFlat = message_label.get_theme_stylebox("normal")
 	style_box.bg_color = Color("#262b34")
 	if not message.is_empty():
@@ -31,14 +37,20 @@ func _ready() -> void:
 	_on_loading_screen_scene_selected(loading_screen_scene_option_button.selected)
 	loading_screen_scene_option_button.item_selected.connect(_on_loading_screen_scene_selected)
 	
+	control_button.pressed.connect(_on_control_button_pressed)
 	reload_scene_button.pressed.connect(_on_reload_scene)
-	change_scene_button.pressed.connect(_on_change_scene)
+	change_scene_button.pressed.connect(_fade_to_change_scene)
 
 
 func _on_reload_scene() -> void:
 	get_node("/root/SceneManager").reload_current_scene({
 		message = "Scene reloaded!"
 	})
+
+
+func _fade_to_change_scene() -> void:
+	process_mode = PROCESS_MODE_DISABLED
+	get_node("/root/SceneManager").transition_start(RADIAL_TO_BLACK).finished.connect(_on_change_scene)
 
 
 func _on_change_scene() -> void:
@@ -80,3 +92,6 @@ func _on_source_selected(index: int) -> void:
 func _on_loading_screen_scene_selected(index: int) -> void:
 	var message_control: Control = %LoadingScreenContainer/Controls/MessageControl
 	message_control.visible = index == 1
+
+func _on_control_button_pressed() -> void:
+	get_node("/root/SceneManager").change_scene_to_file("res://addons/scene_manager/test/control/control.tscn")

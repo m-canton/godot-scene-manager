@@ -12,13 +12,16 @@ class_name LoadingScreen extends Control
 
 ## Default Loading Screen scene path.
 const DEFAULT_PATH := "res://addons/scene_manager/autoload/loading_screen.tscn"
+## Loading screen default path setting name.
 const SETTING_NAME_DEFAULT_PATH := "addons/scene_manager/loading_screen/default_scene_path"
+## Print loading times setting name.
 const SETTING_NAME_PRINT_LOADING_TIMES := "addons/scene_manager/loading_screen/print_loading_times"
 
+## Loading Screen type.
 enum Type {
-	DEFAULT,
-	PERSIST,
-	ONE_SHOT,
+	DEFAULT, ## Default loading screen.
+	PERSIST, ## Used it on next loads until other loading screen is set. Use [method SceneManager.reset_loading_screen] to set the default loading screen.
+	ONE_SHOT, ## Used it on one load. After setting the default loading screen.
 }
 
 ## Property used to store the tween which does smooth progress change.
