@@ -6,7 +6,7 @@ Scene Manager Plugin for Godot 4.2+.
 
 SceneManager autoload has three methods called `change_scene_to_file`, `change_scene_to_packed` and `reload_current_scene` like SceneTree methods. They do the same and have an optional argument `properties` to pass initial properties for next scene. You also can use a loading screen when a file path is used. You can create a custom loading screen which must extend `LoadingScreenBase` class. You can set loading screen in project settings.
 
-See [test folder](https://github.com/m-canton/godot-scene-manager/tree/main/addons/scene_manager/test) and [wiki](https://github.com/m-canton/godot-scene-manager/wiki) for more examples. Simple use:
+Check [test folder](https://github.com/m-canton/godot-scene-manager/tree/main/addons/scene_manager/test) and [wiki](https://github.com/m-canton/godot-scene-manager/wiki) to see examples about transitions, opening/closing modals and more. Basic example:
 
 ```gdscript
 var ref := SceneManager.append_resource("my_character_data.tres")
