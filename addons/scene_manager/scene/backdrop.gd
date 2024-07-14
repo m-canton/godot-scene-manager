@@ -7,11 +7,7 @@ signal close_modal_requested
 ## SceneManager modal backdrop.
 ## 
 ## This class has useful properties and methods to show its first control child
-## with an adjustable position and opacity animation.[br]
-## [b]Note:[/b] Position is not working yet. I get issues with hidden node and
-## size udpate.
-## 
-## @experimental
+## with an adjustable position and opacity animation.
 
 enum State {
 	OPEN,
@@ -59,13 +55,12 @@ var _loading_path := ""
 			color = value
 			queue_redraw()
 ## Close modal when backdrop is clicked. When it is [code]false[/code],
-## [signal close_requested] is emitted on backdrop click to customize
+## [signal close_modal_requested] is emitted on backdrop click to customize
 ## behavior.
 @export var close_modal_on_clicked := true
 
 @export_group("Animation")
 ## Modal position offset unit. See [member modal_offset].
-## @experimental
 @export var modal_offset_unit := Unit.PIXEL:
 	set(value):
 		if modal_offset_unit != value:
@@ -80,14 +75,12 @@ var _loading_path := ""
 					modal_offset /= size
 			modal_offset_unit = value
 ## Modal position offset to tween from offset to initial position.
-## @experimental
 @export var modal_offset := Vector2.ZERO
 ## Opening transition duration.
 @export var opening_duration := 0.25
 ## Closing transition duration.
 @export var closing_duration := 0.25
-## Indicates if it must animate modal opacity. It is always animated backdrop
-## color if [member tween_duration] is positive.
+## Indicates if it must animate modal opacity.
 @export var tween_modal_opacity := true
 
 #region Virtual Methods
@@ -148,8 +141,7 @@ func _gui_input(event: InputEvent) -> void:
 #endregion
 
 #region Set and load
-## Adds a node as modal. It stores initial properties to tween them after
-## @experimental
+## Adds a node as modal. It stores initial properties to tween them after.
 func set_modal(control: Control, state := State.CLOSE) -> void:
 	if not control:
 		control = null
@@ -172,7 +164,6 @@ func set_modal(control: Control, state := State.CLOSE) -> void:
 		_on_modal_closed()
 
 ## Instantiates a packed scene to use it as modal.
-## @experimental
 func set_modal_from_packed(packed: PackedScene, state := State.CLOSE) -> void:
 	if not packed:
 		push_error("'packed' is null.")
@@ -242,9 +233,8 @@ func close_modal() -> Tween:
 	_tween.finished.connect(_on_modal_closed)
 	
 	return _tween
-#endregion
 
-
+## Sets open progress and properties.
 func _set_open_progress(value: float) -> void:
 	_modal_open_progress = value
 	
@@ -275,3 +265,4 @@ func _on_modal_opened() -> void:
 func _on_modal_closed() -> void:
 	hide()
 	process_mode = Node.PROCESS_MODE_DISABLED if _process_mode != Node.PROCESS_MODE_ALWAYS else _process_mode
+#endregion
