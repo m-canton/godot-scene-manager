@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://cot2tlql8xy08"]
+[gd_scene load_steps=8 format=3 uid="uid://cot2tlql8xy08"]
 
 [ext_resource type="Script" path="res://addons/scene_manager/test/modals/modals.gd" id="1_21w2b"]
 [ext_resource type="Script" path="res://addons/scene_manager/scene/backdrop.gd" id="2_o1el5"]
+[ext_resource type="Script" path="res://addons/scene_manager/test/modals/drawer.gd" id="3_ahf14"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ry0cw"]
 bg_color = Color(0.145098, 0.168627, 0.203922, 1)
@@ -16,6 +17,12 @@ corner_radius_top_left = 6
 corner_radius_top_right = 6
 corner_radius_bottom_right = 6
 corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_52qsr"]
+bg_color = Color(0.145098, 0.168627, 0.203922, 1)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_qwo35"]
+content_margin_bottom = 24.0
 
 [node name="Modals" type="Control"]
 layout_mode = 3
@@ -41,10 +48,10 @@ offset_right = 40.0
 offset_bottom = 40.0
 theme_override_constants/separation = 8
 
-[node name="BackButton" type="Button" parent="HBoxContainer"]
+[node name="DrawerButton" type="Button" parent="HBoxContainer"]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
-text = "Back"
+text = "Drawer"
 
 [node name="PlayButton" type="Button" parent="HBoxContainer"]
 custom_minimum_size = Vector2(40, 40)
@@ -56,7 +63,7 @@ custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 text = "Open Modal"
 
-[node name="Modal" type="Control" parent="."]
+[node name="Backdrop" type="Container" parent="."]
 visible = false
 layout_mode = 1
 anchors_preset = 15
@@ -67,46 +74,87 @@ grow_vertical = 2
 script = ExtResource("2_o1el5")
 modal_offset = Vector2(0, 60)
 
-[node name="PanelContainer" type="PanelContainer" parent="Modal"]
+[node name="PanelContainer" type="PanelContainer" parent="Backdrop"]
 custom_minimum_size = Vector2(360, 0)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -180.0
-offset_top = -58.0
-offset_right = 180.0
-offset_bottom = 58.0
-grow_horizontal = 2
-grow_vertical = 2
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
 theme_override_styles/panel = SubResource("StyleBoxFlat_muc21")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Modal/PanelContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Backdrop/PanelContainer"]
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="Label" type="Label" parent="Modal/PanelContainer/VBoxContainer"]
+[node name="Label" type="Label" parent="Backdrop/PanelContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
 text = "Title"
 
-[node name="RichTextLabel" type="RichTextLabel" parent="Modal/PanelContainer/VBoxContainer"]
+[node name="RichTextLabel" type="RichTextLabel" parent="Backdrop/PanelContainer/VBoxContainer"]
 layout_mode = 2
 text = "A simple description..."
 fit_content = true
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Modal/PanelContainer/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Backdrop/PanelContainer/VBoxContainer"]
 layout_mode = 2
 alignment = 2
 
-[node name="CancelButton" type="Button" parent="Modal/PanelContainer/VBoxContainer/HBoxContainer"]
+[node name="CancelButton" type="Button" parent="Backdrop/PanelContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 text = "Cancel"
 
-[node name="AcceptButton" type="Button" parent="Modal/PanelContainer/VBoxContainer/HBoxContainer"]
+[node name="AcceptButton" type="Button" parent="Backdrop/PanelContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 text = "Accept"
 
-[connection signal="pressed" from="Modal/PanelContainer/VBoxContainer/HBoxContainer/CancelButton" to="Modal" method="close_modal"]
+[node name="DrawerBackdrop" type="Container" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("2_o1el5")
+modal_offset_unit = 2
+modal_offset = Vector2(-1, 0)
+tween_modal_opacity = false
+
+[node name="Drawer" type="PanelContainer" parent="DrawerBackdrop"]
+layout_mode = 2
+size_flags_horizontal = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_52qsr")
+script = ExtResource("3_ahf14")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="DrawerBackdrop/Drawer"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="DrawerBackdrop/Drawer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Button" type="Button" parent="DrawerBackdrop/Drawer/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "×"
+
+[node name="Label" type="Label" parent="DrawerBackdrop/Drawer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "A drawer"
+
+[node name="RichTextLabel" type="RichTextLabel" parent="DrawerBackdrop/Drawer/VBoxContainer"]
+custom_minimum_size = Vector2(360, 0)
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxEmpty_qwo35")
+text = "A short description."
+fit_content = true
+
+[node name="ReturnButton" type="Button" parent="DrawerBackdrop/Drawer/VBoxContainer"]
+layout_mode = 2
+text = "Return to Main Scene"
+
+[connection signal="pressed" from="Backdrop/PanelContainer/VBoxContainer/HBoxContainer/CancelButton" to="Backdrop" method="close_modal"]
+[connection signal="pressed" from="Backdrop/PanelContainer/VBoxContainer/HBoxContainer/AcceptButton" to="Backdrop" method="close_modal"]
+[connection signal="pressed" from="DrawerBackdrop/Drawer/VBoxContainer/HBoxContainer/Button" to="DrawerBackdrop" method="close_modal"]

@@ -7,15 +7,15 @@ var _shader_tween: Tween
 var _shader_tween_reverse := false
 var _shader_current_image := 0
 
-@onready var back_button := $HBoxContainer/BackButton
+@onready var drawer_button := $HBoxContainer/DrawerButton
 @onready var play_button: Button = $HBoxContainer/PlayButton
 @onready var open_modal_button: Button = $HBoxContainer/OpenModalButton
 
-@onready var backdrop: SceneManagerBackdrop = $Modal
+@onready var backdrop: SceneManagerBackdrop = $Backdrop
 
 
 func _ready() -> void:
-	back_button.pressed.connect(get_node("/root/SceneManager").change_scene_to_file.bind("res://addons/scene_manager/test/change_scene/test_scene.tscn"))
+	drawer_button.pressed.connect(_on_drawer_button_pressed)
 	play_button.pressed.connect(_on_play)
 	open_modal_button.pressed.connect(_on_open_modal)
 
@@ -28,6 +28,10 @@ func _on_transition_finished() -> void:
 
 func _on_reverse_transition_finished() -> void:
 	process_mode = PROCESS_MODE_INHERIT
+
+
+func _on_drawer_button_pressed() -> void:
+	$DrawerBackdrop.open_modal()
 
 
 func _on_open_modal() -> void:

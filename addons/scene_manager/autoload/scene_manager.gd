@@ -17,6 +17,7 @@ func _ready() -> void:
 	set_loading_screen(ProjectSettings.get_setting(LoadingScreen.SETTING_NAME_DEFAULT_PATH, LoadingScreen.DEFAULT_PATH), LoadingScreen.Type.DEFAULT)
 	print_loading_times = ProjectSettings.get_setting(LoadingScreen.SETTING_NAME_PRINT_LOADING_TIMES, false)
 	layer = ProjectSettings.get_setting(SceneTransition.SETTING_NAME_LAYER, SceneTransition.DEFAULT_LAYER)
+	_canvas_item.hide()
 	
 	get_tree().root.child_entered_tree.connect(_on_child_entered_tree)
 	get_tree().root.child_exiting_tree.connect(_on_child_existing_tree)
@@ -398,17 +399,17 @@ func _on_load_error() -> void:
 
 
 #region Transition
+@onready var _canvas_item: CanvasItem = $CanvasItem
+
 ## Current transition tween. [SceneManager.transition_start] returns this.
 var _transition_tween: Tween
 var _transition_duration := 0.0
 
-## Node to show the transition.
-@onready var color_rect: ColorRect = $ColorRect
-
 func transition_clear() -> void:
+	_canvas_item.hide()
 	_transition_duration = 0.0
 	
-	var material: ShaderMaterial = color_rect.material
+	var material: ShaderMaterial = _canvas_item.material
 	material.set_shader_parameter("completion", 0.0)
 	material.set_shader_parameter("use_gradient", false)
 	material.set_shader_parameter("use_color_texture", false)
@@ -422,9 +423,8 @@ func transition_set_duration(duration: float) -> void:
 func transition_start(transition: SceneTransition, reverse := false) -> Tween:
 	if _transition_tween and _transition_tween.is_valid():
 		_transition_tween.kill()
-	_transition_tween = create_tween()
 	
-	var material: ShaderMaterial = color_rect.material
+	var material: ShaderMaterial = _canvas_item.material
 	if transition.gradient_texture:
 		material.set_shader_parameter("use_gradient", true)
 		material.set_shader_parameter("gradient_texture", transition.gradient_texture)
@@ -441,12 +441,14 @@ func transition_start(transition: SceneTransition, reverse := false) -> Tween:
 		material.set_shader_parameter("use_color_texture", true)
 		material.set_shader_parameter("color_texture", transition.color_texture)
 	
+	_canvas_item.show()
 	var value := 1.0 if reverse else 0.0
+	_transition_tween = create_tween()
 	_transition_tween.tween_method(_transition_set_shader_completion, value, 1.0 - value, transition.duration if _transition_duration == 0 else _transition_duration)
 	
 	return _transition_tween
 
 ## Sets shader completion parameter.
 func _transition_set_shader_completion(value: float) -> void:
-	(color_rect.material as ShaderMaterial).set_shader_parameter("completion", value)
+	(_canvas_item.material as ShaderMaterial).set_shader_parameter("completion", value)
 #endregion

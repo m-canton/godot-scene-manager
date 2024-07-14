@@ -21,7 +21,9 @@ var message := ""
 
 func _ready() -> void:
 	process_mode = PROCESS_MODE_DISABLED
-	get_node("/root/SceneManager").transition_start(FADE_TO_BLACK, true).finished.connect(func(): process_mode = PROCESS_MODE_INHERIT)
+	get_node("/root/SceneManager").transition_start(FADE_TO_BLACK, true).finished.connect(func():
+		process_mode = PROCESS_MODE_INHERIT
+	)
 	
 	var style_box: StyleBoxFlat = message_label.get_theme_stylebox("normal")
 	style_box.bg_color = Color("#262b34")

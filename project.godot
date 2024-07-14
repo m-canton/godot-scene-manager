@@ -25,11 +25,16 @@ SceneManager="*res://addons/scene_manager/autoload/scene_manager.tscn"
 [display]
 
 window/stretch/aspect="expand"
+window/dpi/allow_hidpi=false
 window/stretch/scale.mobile=3.0
 
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/scene_manager/plugin.cfg")
+
+[gui]
+
+theme/default_font_multichannel_signed_distance_field=true
 
 [rendering]
 

@@ -1,12 +1,13 @@
 [gd_scene load_steps=3 format=3 uid="uid://byv4kvn38ec7g"]
 
-[ext_resource type="Script" path="res://addons/scene_manager/autoload/scene_manager.gd" id="1_nxen0"]
+[ext_resource type="Script" path="res://addons/scene_manager/autoload/scene_manager.gd" id="1_hnwy1"]
 [ext_resource type="Material" uid="uid://byg1ok02sgkaf" path="res://addons/scene_manager/autoload/material.tres" id="1_rbhg4"]
 
-[node name="SceneManager" type="CanvasLayer"]
-script = ExtResource("1_nxen0")
+[node name="CanvasLayer" type="CanvasLayer"]
+process_mode = 3
+script = ExtResource("1_hnwy1")
 
-[node name="ColorRect" type="ColorRect" parent="."]
+[node name="CanvasItem" type="ColorRect" parent="."]
 process_mode = 4
 material = ExtResource("1_rbhg4")
 anchors_preset = 15
