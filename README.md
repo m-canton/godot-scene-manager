@@ -27,4 +27,6 @@ When you enable this plugin, the `SceneManager` autoload and `addons/scene_manag
 
 ## Uninstall
 
-Disable the plugin (remove an autoload and an EditorExportPlugin) and remove `scene_manager` from addons folder and manually remove the `addons/scene_manager/*` project settings.
+- Disable the plugin (remove an autoload and an EditorExportPlugin).
+- Remove `scene_manager` from addons folder.
+- Manually remove the `addons/scene_manager/*` project settings.
