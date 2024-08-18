@@ -10,8 +10,13 @@ func _enter_tree() -> void:
 	_export_plugin = preload("res://addons/scene_manager/editor/export.gd").new()
 	add_export_plugin(_export_plugin)
 	
-	_init_settings()
-
+	# Settings
+	_set_setting(SceneTransition.SETTING_NAME_LAYER, SceneTransition.DEFAULT_LAYER)
+	_set_setting(LoadingScreen.SETTING_NAME_PRINT_LOADING_TIMES, false)
+	_set_setting(LoadingScreen.SETTING_NAME_DEFAULT_PATH, LoadingScreen.DEFAULT_PATH, true, {
+		"hint": PROPERTY_HINT_FILE,
+		"hint_string": "*.scn,*.tscn",
+	})
 
 func _exit_tree() -> void:
 	remove_autoload_singleton("SceneManager")
@@ -19,35 +24,12 @@ func _exit_tree() -> void:
 	remove_export_plugin(_export_plugin)
 	_export_plugin = null
 
-
-func _init_settings() -> void:
-	# Transition canvas layer index. Change this value in settings if you use
-	# other canvas layers.
-	if not ProjectSettings.has_setting(SceneTransition.SETTING_NAME_LAYER):
-		ProjectSettings.set_setting(SceneTransition.SETTING_NAME_LAYER, SceneTransition.DEFAULT_LAYER)
-	ProjectSettings.set_initial_value(SceneTransition.SETTING_NAME_LAYER, SceneTransition.DEFAULT_LAYER)
-	ProjectSettings.set_as_basic(SceneTransition.SETTING_NAME_LAYER, true)
-	ProjectSettings.add_property_info({
-		"name": SceneTransition.SETTING_NAME_LAYER,
-		"type": TYPE_INT,
-	})
-	
-	if not ProjectSettings.has_setting(LoadingScreen.SETTING_NAME_PRINT_LOADING_TIMES):
-		ProjectSettings.set_setting(LoadingScreen.SETTING_NAME_PRINT_LOADING_TIMES, false)
-	ProjectSettings.set_initial_value(LoadingScreen.SETTING_NAME_PRINT_LOADING_TIMES, false)
-	ProjectSettings.set_as_basic(LoadingScreen.SETTING_NAME_PRINT_LOADING_TIMES, true)
-	ProjectSettings.add_property_info({
-		"name": LoadingScreen.SETTING_NAME_PRINT_LOADING_TIMES,
-		"type": TYPE_BOOL,
-	})
-	
-	if not ProjectSettings.has_setting(LoadingScreen.SETTING_NAME_DEFAULT_PATH):
-		ProjectSettings.set_setting(LoadingScreen.SETTING_NAME_DEFAULT_PATH, LoadingScreen.DEFAULT_PATH)
-	ProjectSettings.set_initial_value(LoadingScreen.SETTING_NAME_DEFAULT_PATH, LoadingScreen.DEFAULT_PATH)
-	ProjectSettings.set_as_basic(LoadingScreen.SETTING_NAME_DEFAULT_PATH, true)
-	ProjectSettings.add_property_info({
-		"name": LoadingScreen.SETTING_NAME_DEFAULT_PATH,
-		"type": TYPE_STRING,
-		"hint": PROPERTY_HINT_FILE,
-		"hint_string": "*.scn,*.tscn"
-	})
+func _set_setting(setting_name: String, default_value, basic := true, property_info := {}) -> void:
+	if not ProjectSettings.has_setting(setting_name):
+		ProjectSettings.set_setting(setting_name, default_value)
+	ProjectSettings.set_initial_value(setting_name, default_value)
+	ProjectSettings.set_as_basic(setting_name, basic)
+	if not property_info.is_empty():
+		property_info["name"] = setting_name
+		property_info["type"] = property_info.get("type", typeof(default_value))
+		ProjectSettings.add_property_info(property_info)

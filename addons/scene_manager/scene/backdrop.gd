@@ -1,13 +1,13 @@
 @tool
 class_name SceneManagerBackdrop extends Container
 
-## See [member close_modal_on_clicked].
-signal close_modal_requested
-
 ## SceneManager modal backdrop.
 ## 
 ## This class has useful properties and methods to show its first control child
 ## with an adjustable position and opacity animation.
+
+## See [member close_modal_on_clicked].
+signal close_modal_requested
 
 enum State {
 	OPEN,
