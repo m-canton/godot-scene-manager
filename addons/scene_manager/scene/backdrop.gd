@@ -25,8 +25,6 @@ var modal: Control
 
 ## Backdrop initial process mode.
 var _process_mode := Node.PROCESS_MODE_INHERIT
-## Indicates if modal has seen drawn.
-var _modal_is_drawn := false
 ## Current modal state.
 var _modal_state := State.CLOSE
 ## Modal initial process mode.

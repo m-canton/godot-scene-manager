@@ -166,8 +166,8 @@ text = "Source"
 [node name="OptionButton" type="OptionButton" parent="ColorRect/VBoxContainer/MessageMarginContainer/VBoxContainer/PanelContainer/VBoxContainer/ScrollContainer/VBoxContainer/ChageSceneContainer/Controls/SourceControl"]
 layout_mode = 2
 theme = SubResource("Theme_25wr8")
-item_count = 2
 selected = 0
+item_count = 2
 popup/item_0/text = "Path"
 popup/item_0/id = 1
 popup/item_1/text = "Packed Scene"
@@ -212,10 +212,9 @@ text = "Scene"
 [node name="OptionButton" type="OptionButton" parent="ColorRect/VBoxContainer/MessageMarginContainer/VBoxContainer/PanelContainer/VBoxContainer/ScrollContainer/VBoxContainer/LoadingScreenContainer/Controls/SceneControl"]
 custom_minimum_size = Vector2(120, 0)
 layout_mode = 2
-item_count = 2
 selected = 0
+item_count = 2
 popup/item_0/text = "Default"
-popup/item_0/id = 0
 popup/item_1/text = "Custom"
 popup/item_1/id = 1
 
